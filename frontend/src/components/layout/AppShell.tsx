@@ -17,6 +17,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <a href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Home</a>
             <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">About</a>
             <a href="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">How It Works</a>
+            <a href="/predict" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">Predict</a>
             <a href="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Login</a>
           </nav>
           <div className="flex items-center gap-4">
