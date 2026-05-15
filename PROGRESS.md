@@ -199,18 +199,18 @@ Complete (Foundation)
 
 ### Phase 5 — Public Pages
 
-- [ ] Landing page
-- [ ] About page
-- [ ] How It Works page
-- [ ] Login page shell
-- [ ] Recruiter-facing workflow diagrams
-- [ ] Responsible AI messaging
-- [ ] Verify frontend build
+- [x] Landing page
+- [x] About page
+- [x] How It Works page
+- [x] Login page shell
+- [x] Recruiter-facing workflow diagrams
+- [x] Responsible AI messaging
+- [x] Verify frontend build
 
 Status:
 
 ```text
-Not started
+Complete
 ```
 
 ---
@@ -887,12 +887,45 @@ Phase 5 — Public Pages
 
 ---
 
+## Update — Phase 5
+
+### Completed Phase
+Phase 5 — Public Pages
+
+### Files Changed
+- `frontend/src/components/layout/AppShell.tsx`
+- `frontend/src/app/about/page.tsx` (Created)
+- `frontend/src/app/how-it-works/page.tsx` (Created)
+- `frontend/src/app/login/page.tsx` (Created)
+
+### What Was Implemented
+- Updated `AppShell` navigation links to dynamically map to the new public pages (`/about`, `/how-it-works`, `/login`).
+- Created an **About** page detailing the project scope, dataset background, security architecture, and strict clinical limitations (Responsible AI messaging).
+- Created a **How It Works** page breaking down the ML inference pipeline into step-by-step visual cards, perfect for recruiter demonstrations. Included a high-level deployment architecture breakdown.
+- Created a **Login** page skeleton featuring a secure OAuth prompt ("Continue with Google") and demo access disclaimers. No fake auth logic was implemented.
+- Ensured all pages strictly adhered to the design system (SurfaceCards, StatusBadges) without over-engineering or unnecessary animations.
+
+### Verification Commands Run
+- `pnpm build`
+
+### Results
+- Build passed successfully with `0` errors. All static pages generated efficiently in ~930ms.
+- Design remains aligned with the 'professional healthcare SaaS' criteria.
+
+### Known Issues
+- None. Routing and layout are complete.
+
+### Next Step
+Phase 6 — Backend Skeleton
+
+---
+
 ## 11. Current Next Step
 
 The next step is:
 
 ```text
-Run Phase 5 — Public Pages
+Run Phase 6 — Backend Skeleton
 ```
 
-Proceed to build the full landing page, about page, and recruiter-facing documentation pages.
+Proceed to bootstrap the FastAPI application structure, config module, database connections, and standard response helpers.

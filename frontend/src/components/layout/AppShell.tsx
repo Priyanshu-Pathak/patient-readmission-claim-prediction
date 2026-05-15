@@ -14,10 +14,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="font-semibold text-lg tracking-tight">AdmitGuard<span className="text-primary">.</span></span>
           </div>
           <nav className="hidden md:flex gap-6">
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Dashboard</a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Patients</a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Batch Upload</a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Reports</a>
+            <a href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Home</a>
+            <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">About</a>
+            <a href="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">How It Works</a>
+            <a href="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Login</a>
           </nav>
           <div className="flex items-center gap-4">
             <div className="h-8 w-8 rounded-full bg-muted border border-border" />
