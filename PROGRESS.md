@@ -1171,6 +1171,27 @@ Phase 9 — Claim ML Service
 ### Next Step
 Phase 10 — UI Integration
 
+## Update — Phase 9.1 (Claim Model Sanity Audit)
+
+### Completed Phase
+Phase 9.1 — Claim Model Sanity Audit
+
+### Audit Findings
+- **Row Count Explanation:** Verified that the physical file `final_adjusted_healthcare_dataset.xlsx` genuinely contains exactly 14,000 rows across its single sheet. The earlier Phase 8 mention of "50,000" rows was an error/hallucination in the reporting log and not an issue with dataset truncation.
+- **Data Leakage Check:** Passed. Verified that the feature selection cleanly drops the `claim` (target) and `readmitted` (post-outcome) columns, ensuring predictions rely solely on pre-outcome clinical features.
+- **Noisy Columns Check:** Passed. The script consistently drops `smoker` and `regular_exercise` using the same safety logic as Phase 8.
+
+### Git Tracking Updates
+- The heavy `claim_model.joblib` artifact accurately remains untracked due to the `*.joblib` blanket block.
+- The associated `claim_features.json`, `claim_metadata.json`, and the metric reports are successfully tracked via the `.gitignore` exceptions established in Phase 8.2.
+
+### Validation Result
+- Python syntax (`compileall`) passed again across `backend/app`, `ml/src`, and `ml/scripts`.
+- Verified dynamic FastAPI route bindings: `['/api/v1/openapi.json', '/docs', '/docs/oauth2-redirect', '/redoc', '/api/v1/health/', '/api/v1/health/ready', '/api/v1/readmission/predict', '/api/v1/claim/predict']`.
+
+### Next Step
+Phase 10 — UI Integration
+
 ---
 
 ## 11. Current Next Step
