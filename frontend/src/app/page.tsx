@@ -10,29 +10,30 @@ import { Button } from "@/components/ui/Button";
 export default function Home() {
   return (
     <AppShell>
-      <Container className="space-y-12 pb-12">
+      <Container className="space-y-16 pb-16">
         {/* Hero Section */}
-        <section className="pt-12 pb-8 md:pt-20 md:pb-16 text-center max-w-3xl mx-auto">
-          <StatusBadge status="info" label="AdmitGuard v1.0 Preview" className="mb-6" />
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-6">
-            Intelligent Risk Estimation for Healthcare Workflows
+        <section className="pt-16 pb-12 md:pt-24 md:pb-20 text-center max-w-4xl mx-auto flex flex-col items-center">
+          <StatusBadge status="info" label="AdmitGuard Clinical Intelligence v1.0" className="mb-8 px-4 py-1" />
+          <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl mb-8 leading-tight">
+            Intelligent Risk Estimation for <br className="hidden md:block"/> Healthcare Workflows
           </h1>
-          <p className="text-lg text-muted-foreground mb-8">
+          <p className="text-xl text-muted-foreground mb-10 max-w-2xl leading-relaxed">
             A modern decision-support analytics preview designed to forecast diabetes patient readmission likelihood and estimate associated claim burden. 
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button variant="primary">Launch Dashboard</Button>
-            <Button variant="outline">View Batch Upload</Button>
+          <div className="flex flex-col sm:flex-row justify-center gap-6 w-full sm:w-auto">
+            <Button variant="primary" className="h-12 px-8 text-base rounded-lg shadow-[0_0_20px_rgba(20,184,166,0.3)]">Launch Dashboard</Button>
+            <Button variant="secondary" className="h-12 px-8 text-base rounded-lg">View Batch Upload</Button>
           </div>
         </section>
 
         {/* Analytics Preview Metrics */}
-        <section>
+        <section className="max-w-6xl mx-auto">
           <SectionHeader 
             title="Cohort Overview" 
             description="At-a-glance metrics for the current patient cohort." 
+            className="text-center md:text-left mb-10"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <MetricCard 
               title="Total Analyzed" 
               value="1,248" 
@@ -60,60 +61,67 @@ export default function Home() {
         </section>
 
         {/* Prediction Cards */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <SurfaceCard hoverEffect className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Readmission Risk</h3>
-              <StatusBadge status="danger" label="High Risk" />
-            </div>
-            <p className="text-sm text-muted-foreground flex-1">
-              Patient #8271 exhibits a 78% likelihood of 30-day readmission driven by A1C levels and recent emergency visits.
-            </p>
-            <div className="pt-4 border-t border-border/50">
-              <Button variant="outline" className="w-full text-xs">View Patient Profile</Button>
-            </div>
-          </SurfaceCard>
+        <section className="max-w-6xl mx-auto">
+          <SectionHeader 
+            title="Core Capabilities" 
+            description="Deep insights powered by explainable AI." 
+            className="text-center md:text-left mb-10"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <SurfaceCard hoverEffect className="flex flex-col gap-5 border-t-2 border-t-danger/50">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-xl">Readmission Risk</h3>
+                <StatusBadge status="danger" label="High Risk" />
+              </div>
+              <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
+                Patient #8271 exhibits a 78% likelihood of 30-day readmission driven by A1C levels and recent emergency visits.
+              </p>
+              <div className="pt-5 border-t border-border/50">
+                <Button variant="outline" className="w-full text-sm h-10 border-primary/20 hover:border-primary/50 hover:text-primary">View Patient Profile</Button>
+              </div>
+            </SurfaceCard>
 
-          <SurfaceCard hoverEffect className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Claim Forecast</h3>
-              <StatusBadge status="warning" label="Elevated" />
-            </div>
-            <p className="text-sm text-muted-foreground flex-1">
-              Estimated claim amount is projected at $12,450, exceeding the baseline cohort average by 24%.
-            </p>
-            <div className="pt-4 border-t border-border/50">
-              <Button variant="outline" className="w-full text-xs">Analyze Cost Drivers</Button>
-            </div>
-          </SurfaceCard>
+            <SurfaceCard hoverEffect className="flex flex-col gap-5 border-t-2 border-t-warning/50">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-xl">Claim Forecast</h3>
+                <StatusBadge status="warning" label="Elevated" />
+              </div>
+              <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
+                Estimated claim amount is projected at $12,450, exceeding the baseline cohort average by 24%.
+              </p>
+              <div className="pt-5 border-t border-border/50">
+                <Button variant="outline" className="w-full text-sm h-10 border-primary/20 hover:border-primary/50 hover:text-primary">Analyze Cost Drivers</Button>
+              </div>
+            </SurfaceCard>
 
-          <SurfaceCard hoverEffect className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Triage Workflow</h3>
-              <StatusBadge status="success" label="Active" />
-            </div>
-            <p className="text-sm text-muted-foreground flex-1">
-              Case forwarded to care management team for immediate preventative intervention scheduling.
-            </p>
-            <div className="pt-4 border-t border-border/50">
-              <Button variant="outline" className="w-full text-xs">Review Protocol</Button>
-            </div>
-          </SurfaceCard>
+            <SurfaceCard hoverEffect className="flex flex-col gap-5 border-t-2 border-t-primary/50">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-xl">Triage Workflow</h3>
+                <StatusBadge status="success" label="Active" />
+              </div>
+              <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
+                Case forwarded to care management team for immediate preventative intervention scheduling.
+              </p>
+              <div className="pt-5 border-t border-border/50">
+                <Button variant="outline" className="w-full text-sm h-10 border-primary/20 hover:border-primary/50 hover:text-primary">Review Protocol</Button>
+              </div>
+            </SurfaceCard>
+          </div>
         </section>
 
-        {/* Security & Privacy Note */}
-        <section className="pt-8">
-          <SurfaceCard className="bg-primary/5 border-primary/20">
-            <div className="flex gap-4 items-start">
-              <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                <span className="text-primary text-xl">🔒</span>
+        {/* Security & Privacy Note (Stitch Recommended Compliance Section) */}
+        <section className="pt-12 max-w-4xl mx-auto">
+          <SurfaceCard className="bg-gradient-to-r from-primary/10 to-transparent border-primary/30 shadow-[0_0_30px_rgba(20,184,166,0.05)] p-8">
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              <div className="h-14 w-14 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 border border-primary/40 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+                <span className="text-primary text-2xl">🔒</span>
               </div>
               <div>
-                <h4 className="font-semibold mb-1">Security & Usage Disclaimer</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="text-xl font-bold mb-2 text-foreground tracking-tight">Compliance & Security Disclaimer</h4>
+                <p className="text-base text-muted-foreground leading-relaxed">
                   This application uses role-based access control and strict data validation. It is intended strictly for 
                   analytical demonstration and educational decision-support. Do not use these ML risk estimations 
-                  as a substitute for professional medical diagnosis or clinical judgment.
+                  as a substitute for professional medical diagnosis or clinical judgment. Not HIPAA compliant.
                 </p>
               </div>
             </div>

@@ -16,13 +16,13 @@ export default function HowItWorksPage() {
 
   return (
     <AppShell>
-      <Container className="space-y-12 pb-16">
-        <section className="pt-12 pb-8 max-w-3xl mx-auto text-center">
-          <StatusBadge status="info" label="Architecture & Workflow" className="mb-6" />
-          <h1 className="text-4xl font-extrabold tracking-tight mb-6">
+      <Container className="space-y-16 pb-16">
+        <section className="pt-16 pb-12 max-w-4xl mx-auto text-center flex flex-col items-center">
+          <StatusBadge status="info" label="Architecture & Workflow" className="mb-8 px-4 py-1" />
+          <h1 className="text-5xl font-extrabold tracking-tight mb-8">
             How AdmitGuard Works
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
             A transparent look into the machine learning pipeline, data flow, and deployment architecture powering the analytics engine.
           </p>
         </section>

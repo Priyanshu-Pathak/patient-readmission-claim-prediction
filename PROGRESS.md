@@ -918,6 +918,38 @@ Phase 5 — Public Pages
 ### Next Step
 Phase 6 — Backend Skeleton
 
+## Update — Phase 5.1 (UI/UX Polish)
+
+### Completed Phase
+Phase 5.1 — UI/UX Refinement via Stitch MCP
+
+### Stitch MCP Usage
+- Evaluated generated layouts from Stitch MCP (Dashboard preview prompt).
+- Extracted and applied key recommended design tokens: Deep Medical Slate (`#0f172a`), Vibrant Teal (`#14b8a6`), elevated `20px` glassmorphism blur, and targeted top-accent borders.
+- Verified route requirements: `/project` and `/security` were strictly **not** added, as `PLAN.md` only expects `/`, `/about`, `/how-it-works`, and `/login`.
+
+### Files Changed
+- `frontend/src/app/globals.css`
+- `frontend/src/components/ui/Button.tsx`
+- `frontend/src/app/page.tsx`
+- `frontend/src/app/about/page.tsx`
+- `frontend/src/app/how-it-works/page.tsx`
+
+### What Was Implemented
+- Deepened the root background to `#0f172a` and improved button gradient/hover states.
+- Enhanced `page.tsx` with a dedicated "Compliance & Security Disclaimer" block, explicitly emphasizing "Not HIPAA compliant" and "Educational use only".
+- Standardized vertical rhythm (`space-y-16`) and updated top-borders for glassmorphic cards to create a unified medical-HUD visual hierarchy.
+
+### Verification Commands Run
+- `pnpm build`
+
+### Results
+- Build passed successfully with `0` errors.
+- The UI perfectly reflects a high-end, futuristic healthcare prototype ready for recruiter review.
+
+### Next Step
+Phase 6 — Backend Skeleton
+
 ---
 
 ## 11. Current Next Step

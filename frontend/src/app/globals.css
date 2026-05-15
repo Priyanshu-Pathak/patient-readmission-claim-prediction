@@ -20,20 +20,20 @@
 
 :root {
   /* Dark futuristic/clinical base (Default to dark as requested) */
-  --background: #060b13; /* Deep medical slate/blue base */
+  --background: #0f172a; /* Deep medical slate base (Stitch recommended) */
   --foreground: #eef2f6; /* Off-white for high contrast */
-  --muted: #111a27;
-  --muted-foreground: #8fa0b5;
-  --card: rgba(14, 21, 32, 0.7); /* Glassmorphism base */
-  --border: #1e293b;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --card: rgba(15, 23, 42, 0.7); /* Glassmorphism base Level 1 */
+  --border: rgba(255, 255, 255, 0.1); /* Stitch recommended 10% white border */
   
   /* Brand accents */
-  --primary: #0ea5e9; /* Teal/Light Blue accent */
+  --primary: #14b8a6; /* Vibrant Teal (Stitch recommended) */
   --primary-foreground: #ffffff;
-  --secondary: #3b82f6;
+  --secondary: #38bdf8; /* Sky Blue accent */
 
   /* Status Colors */
-  --success: #10b981; /* Clinical Green */
+  --success: #14b8a6; /* Clinical Teal */
   --warning: #f59e0b; /* Amber */
   --danger: #ef4444;  /* Controlled Red */
 }
@@ -47,7 +47,7 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  background-image: radial-gradient(circle at 50% -20%, rgba(14, 165, 233, 0.05), transparent 60%);
+  background-image: radial-gradient(circle at 50% -20%, rgba(20, 184, 166, 0.05), transparent 60%);
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -69,18 +69,19 @@ body {
 @layer utilities {
   .glass-effect {
     background: var(--card);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(20px); /* Stitch recommended 20px blur */
     border: 1px solid var(--border);
   }
 
   .hover-card-elevation {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
   }
   
   .hover-card-elevation:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.1);
-    border-color: rgba(14, 165, 233, 0.3);
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 15px rgba(20, 184, 166, 0.2); /* Stitch recommended teal glow */
+    border-color: rgba(20, 184, 166, 0.3);
   }
 
   .focus-ring {
