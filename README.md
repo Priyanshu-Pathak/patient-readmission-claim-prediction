@@ -1,127 +1,104 @@
 # AdmitGuard Intelligence
 
-**Patient Readmission & Claim Risk Analytics Platform**
+> A clinical decision-support and analytics prototype providing patient readmission risk estimation and estimated insurance claim analytics.
 
-AdmitGuard Intelligence is a secure, full-stack healthcare analytics platform designed for diabetes patient readmission risk prediction, insurance claim forecasting, cohort-level analytics, explainable machine learning, batch scoring, and automated PDF report generation.
+## 📌 Problem Statement
+Hospital readmissions are a critical quality metric and financial liability for healthcare organizations. Accurately identifying high-risk patients prior to discharge allows clinical teams to intervene with targeted care plans, reducing the likelihood of avoidable readmissions. Simultaneously, understanding estimated insurance claim amounts helps financial planning and resource allocation. AdmitGuard serves as a foundational prototype to bridge clinical operational data with machine learning, enabling proactive risk management.
 
-> **Note**: This is an educational and portfolio ML project inspired by healthcare security best practices. It does not provide medical advice, diagnosis, or treatment recommendations. Final decisions should involve qualified healthcare professionals.
+## ✨ Key Features
+- **Readmission Risk Estimation**: Predicts 30-day readmission probability using 18 pre-outcome clinical features.
+- **Claim Analytics**: Estimates financial claim amounts based on patient demographics and utilization history.
+- **Unified Dashboard**: A polished, responsive web interface built with modern glassmorphism UI for clear presentation.
+- **Robust Architecture**: Modular FastAPI backend supporting dual-model concurrent inference, strictly decoupled from the Next.js frontend.
+- **Safe ML Pipeline**: Fully reproducible `scikit-learn` pipeline with rigorous anti-leakage guards (ensuring post-outcome variables do not corrupt training).
 
-## Documentation Index
+## 🛠 Tech Stack
+- **Frontend**: Next.js 16 (App Router), React, Tailwind CSS, TypeScript
+- **Backend**: FastAPI, Python 3.12, Pydantic, SQLAlchemy 2.0
+- **Machine Learning**: Scikit-Learn, Pandas, NumPy, Joblib
 
-**IMPORTANT:** Before starting any work or contributing, you **must** read the following documentation files in order:
+## 🏗 Architecture Overview
+AdmitGuard operates on a segregated Client-Server architecture:
+1. **Next.js Client**: Provides the recruiter-ready UI. Requests are routed via `src/lib/api.ts` concurrently using `Promise.allSettled`.
+2. **FastAPI Microservice**: Handles inference via two distinct routes: `/api/v1/readmission/predict` and `/api/v1/claim/predict`.
+3. **ML Pipeline**: A local `ml/` environment that processes the raw dataset, maps variables, scales features, and exports `.joblib` binary artifacts consumed by the FastAPI service.
 
-1. [START_HERE.md](START_HERE.md) - Required starting point for all developers and AI agents.
-2. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) - High-level project background and constraints.
-3. [PRD.md](PRD.md) - Product Requirements Document detailing features and users.
-4. [ARCHITECTURE.md](ARCHITECTURE.md) - System design and deployment architecture.
-5. [SECURITY_REQUIREMENTS.md](SECURITY_REQUIREMENTS.md) - Authentication, authorization, and data security rules.
-6. [AGENT_RULES.md](AGENT_RULES.md) - Strict operating instructions for AI coding agents.
-7. [PLAN.md](PLAN.md) - Step-by-step implementation roadmap.
-8. [PROGRESS.md](PROGRESS.md) - Current development status and execution log.
+*(See [Architecture Docs](docs/architecture/README.md) for more details)*
 
-## Problem Statement
+## 🧠 ML Models Used
+The system trains on a structured healthcare dataset of **14,000 rows**.
 
-Healthcare providers need to proactively identify patients at high risk for readmission to improve care quality and optimize resource allocation. Simultaneously, insurance and operations analysts need to forecast the associated claim burden for those readmissions to manage financial risk. AdmitGuard Intelligence provides a comprehensive tool to score patient risk, explain the driving factors behind the prediction, and generate professional reports.
+### Readmission Risk Model (Classification)
+- **Algorithm**: Logistic Regression (with class weight balancing and robust scaling)
+- **Metrics**: 
+  - Accuracy: 0.930
+  - Macro-F1: 0.930
+  - ROC-AUC: 0.985
 
-## Key Features
+### Claim Prediction Model (Regression)
+- **Algorithm**: Random Forest Regressor
+- **Metrics**: 
+  - MAE: 212.76
+  - RMSE: 372.78
+  - R2: 0.972
+  - MAPE: 3.31%
 
-- **Patient-Level Prediction**: Interactive multi-step form for individual readmission risk and claim amount forecasting.
-- **Batch CSV Scoring**: Drag-and-drop CSV upload for processing cohorts of patients simultaneously.
-- **Analytics Dashboard**: Cohort-level analytics, risk band segmentation, and feature importance visualizations.
-- **Explainable AI (XAI)**: Both global and local feature importance (via SHAP/Permutation Importance) to understand model decisions.
-- **Automated Reporting**: Generation of professional, downloadable PDF reports for individual patients and full cohorts.
-- **Secure Access Control**: Google OAuth login with internal Role-Based Access Control (RBAC: Admin, Analyst, Viewer).
-- **Audit Logging**: Robust logging of sensitive operations like batch uploads and report generation.
+## ⚠️ Important Notes
+- **Dataset Note**: The raw dataset (`final_adjusted_healthcare_dataset.xlsx`) is strictly local and explicitly ignored by Git. It is **not committed** to the repository.
+- **Artifact Note**: Large binary `.joblib` model artifacts are also ignored by `.gitignore`. They must be generated locally using the training scripts before running the backend.
+- **Disclaimer**: This platform is a *prototype/decision-support tool*. It is **not** HIPAA compliant, does **not** have clinical approval, and does **not** provide medical or financial advice.
 
-## Tech Stack
+## 🚀 Local Setup Instructions
 
-- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, Recharts (or Plotly), Zod
-- **Backend**: FastAPI, SQLAlchemy, Alembic, Pydantic, Python 3.12+
-- **Machine Learning**: scikit-learn, XGBoost, Pandas, NumPy, Joblib
-- **Database**: PostgreSQL (managed via Docker Compose locally)
-- **Deployment**: Vercel (Frontend), Render/Railway/Fly.io (Backend)
+### 1. Training the Models (Required First)
+Because artifacts are not committed, you must build the models locally.
+1. Place the dataset `final_adjusted_healthcare_dataset.xlsx` into `data/raw/`.
+2. Open a terminal at the project root and activate the environment:
+   ```bash
+   .venv\Scripts\activate
+   ```
+3. Run the training scripts:
+   ```bash
+   python ml/scripts/train_readmission.py
+   python ml/scripts/train_claim.py
+   ```
+   *(This generates the `.joblib` files inside `ml/artifacts/`)*
 
-## High-Level Architecture Overview
+### 2. Running the Backend
+1. Ensure the virtual environment is activated.
+2. From the project root, start FastAPI:
+   ```bash
+   cd backend
+   uvicorn app.main:app --reload --port 8000
+   ```
 
-AdmitGuard Intelligence follows a strict separation of concerns:
-- **Next.js Frontend**: Handles UI rendering, Google OAuth session management, data visualization, and user interaction.
-- **FastAPI Backend**: Serves as the core API, enforcing RBAC, validating inputs, handling database operations, and serving ML predictions.
-- **ML Service**: A modular pipeline that loads pre-trained artifacts (`.joblib`), applies identical preprocessing steps used during training, and enforces data quality guardrails.
-- **PostgreSQL Database**: Stores user profiles, patient records, prediction history, batch jobs, and audit logs.
+### 3. Running the Frontend
+1. Open a new terminal at the project root.
+2. Install dependencies (if not done) and start Next.js:
+   ```bash
+   cd frontend
+   pnpm install
+   pnpm dev
+   ```
+3. Navigate to `http://localhost:3000` to view the dashboard.
 
-*See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed diagrams.*
+## 📡 API Endpoint Summary
+- `GET /api/v1/health/` - Backend health check
+- `POST /api/v1/readmission/predict` - Accepts 18 features and returns risk probability/label.
+- `POST /api/v1/claim/predict` - Accepts 18 features and returns estimated USD claim amount.
 
-## Repository Structure
+*(See [API Docs](docs/api/README.md) for payload definitions)*
 
-```text
-project/
-├── frontend/             # Next.js application
-├── backend/              # FastAPI application
-├── ml/                   # Machine learning pipelines and notebooks
-├── data/                 # Raw and processed datasets, sample CSVs
-├── docs/                 # Additional architecture and design documentation
-├── docker-compose.yml    # Local database and cache infrastructure
-├── requirements.txt      # (Inside backend/) Python dependencies
-└── package.json          # (Inside frontend/) Node dependencies
-```
+## 🔮 Limitations & Future Improvements
+- **Limitations**: The model currently assumes structured tabular data and is trained on a static, limited dataset (14,000 rows).
+- **Improvements**: Integration with live FHIR/HL7 streams, Dockerization for cloud deployment, and implementing user authentication/RBAC for secure provider access.
 
-## Setup Instructions
+---
 
-### Environment Variable Notes
+## 📸 Screenshots
+*(Placeholder for UI showcases)*
 
-Never commit actual secrets or `.env` files. Ensure you copy the `.env.example` files to `.env` in both the `frontend/` and `backend/` directories and populate them with safe, local dummy values or authorized development credentials.
-
-### 1. Docker Compose Usage (Database & Redis)
-
-Start the local PostgreSQL and Redis containers:
-
-```bash
-docker compose up -d
-```
-Verify they are running with `docker ps`.
-
-### 2. Backend Setup Notes
-
-Navigate to the root directory, activate your Python virtual environment (e.g., `.venv`), and install dependencies:
-
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-Run database migrations:
-```bash
-alembic upgrade head
-```
-
-Start the FastAPI development server:
-```bash
-uvicorn app.main:app --reload --port 8000
-```
-
-### 3. Frontend Setup Notes
-
-Navigate to the frontend directory and install dependencies:
-
-```bash
-cd frontend
-pnpm install
-```
-
-Start the Next.js development server:
-```bash
-pnpm dev
-```
-
-## Security Note
-
-This application is built with security in mind:
-- All sensitive routes and APIs are protected.
-- Authentication relies solely on Google OAuth (no custom password storage).
-- Role-Based Access Control (RBAC) is enforced at the backend API level.
-- Uploaded files and user inputs are strictly validated.
-*See [SECURITY_REQUIREMENTS.md](SECURITY_REQUIREMENTS.md) for full details.*
-
-## Development Roadmap
-
-Development follows a strict phase-by-phase execution model. Please review [PLAN.md](PLAN.md) to understand the current and upcoming milestones. Updates to our progress can be tracked in [PROGRESS.md](PROGRESS.md).
+- **Landing Page**: *[Screenshot to be added]*
+- **Prediction Dashboard**: *[Screenshot to be added]*
+- **Result Cards**: *[Screenshot to be added]*
+- **Architecture Flow**: *[Screenshot to be added]*
