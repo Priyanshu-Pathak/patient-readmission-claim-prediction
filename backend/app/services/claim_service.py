@@ -5,14 +5,15 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-from app.core.config import settings
+from app.core.config import settings, PROJECT_ROOT
 from app.schemas.claim import ClaimRequest, ClaimPredictionResponse
 
 logger = logging.getLogger(__name__)
 
 class ClaimService:
     def __init__(self):
-        self.model_path = settings.CLAIM_MODEL_PATH
+        path = Path(settings.CLAIM_MODEL_PATH)
+        self.model_path = path if path.is_absolute() else PROJECT_ROOT / path
         self.model_loaded = False
         self.model = None
 

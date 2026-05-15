@@ -1220,6 +1220,29 @@ Phase 10 — UI Integration
 ### Next Step
 All phases complete! The core ML backend pipeline and client frontend are officially synced and production-ready.
 
+## Update — Phase 10.1 (End-to-End Runtime Integration Test)
+
+### Completed Phase
+Phase 10.1 — End-to-End Runtime Integration Test
+
+### Audit Findings
+- **Artifact Existence Check:** Both `readmission_model.joblib` and `claim_model.joblib` correctly exist locally in `ml/artifacts/` and remain successfully untracked by Git.
+- **Backend Artifact Resolution:** Safely updated `readmission_service.py`, `claim_service.py`, and `config.py` to utilize a deterministic `PROJECT_ROOT` path resolution. This ensures the backend will successfully load the model artifacts regardless of whether it is run from the project root or the `backend/` directory.
+- **Endpoint Runtime Result:** Created a temporary test script (`test_runtime.py`) using FastAPI's `TestClient`. Successfully sent standard prediction payloads matching the 18-feature schema to both `POST /api/v1/readmission/predict` and `POST /api/v1/claim/predict`. 
+  - Identified and fixed a numpy array indexing bug in `readmission_service.py` where a 1D scalar `predict_proba` output was being cast to a float directly.
+  - Both endpoints returned `200 OK` with accurate `model_status: "active"` and legitimate prediction values. No stack traces or validation errors occurred.
+- **Frontend Contract Result:** Verified that `frontend/src/lib/types.ts` flawlessly matches the backend's `StandardResponse` wrapped layout and payload schemas.
+
+### Cleanup Result
+- The temporary scripts (`scratch_sheet.py` and `test_runtime.py`) were both successfully deleted, keeping the source directory clean.
+
+### Validation Result
+- **Frontend:** Next.js Turbopack type-check and production build (`pnpm build`) compiled successfully again.
+- **Backend:** Python `compileall` successfully verified the `readmission_service.py` fix syntax.
+
+### Next Recommended Step
+The system is fully developed and locally validated. The next recommended step is Deployment.
+
 ---
 
 ## 11. Current Next Step

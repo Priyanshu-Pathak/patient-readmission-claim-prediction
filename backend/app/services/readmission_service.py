@@ -5,14 +5,15 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-from app.core.config import settings
+from app.core.config import settings, PROJECT_ROOT
 from app.schemas.readmission import ReadmissionRequest, ReadmissionPredictionResponse
 
 logger = logging.getLogger(__name__)
 
 class ReadmissionService:
     def __init__(self):
-        self.model_path = settings.READMISSION_MODEL_PATH
+        path = Path(settings.READMISSION_MODEL_PATH)
+        self.model_path = path if path.is_absolute() else PROJECT_ROOT / path
         self.model_loaded = False
         self.model = None
 
@@ -54,7 +55,7 @@ class ReadmissionService:
             df = pd.DataFrame([req_dict])
             
             # 2. Predict probability (assuming class 1 is positive readmission risk)
-            probability = float(self.model.predict_proba(df)[:, 1])
+            probability = float(self.model.predict_proba(df)[0, 1])
             predicted_class = int(self.model.predict(df)[0])
             
             # 3. Define Risk Label
