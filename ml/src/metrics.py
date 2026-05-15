@@ -1,5 +1,7 @@
 import json
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, classification_report
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_absolute_percentage_error
+import numpy as np
 
 def evaluate_model(y_true, y_pred, y_prob=None):
     metrics = {
@@ -14,7 +16,22 @@ def evaluate_model(y_true, y_pred, y_prob=None):
         
     return metrics
 
-def save_metrics(y_true, y_pred, y_prob, prefix="readmission"):
+def evaluate_regression_model(y_true, y_pred):
+    metrics = {
+        "mae": float(mean_absolute_error(y_true, y_pred)),
+        "rmse": float(np.sqrt(mean_squared_error(y_true, y_pred))),
+        "r2": float(r2_score(y_true, y_pred)),
+        "mape": float(mean_absolute_percentage_error(y_true, y_pred)),
+    }
+    return metrics
+
+def save_metrics(y_true, y_pred, y_prob=None, prefix="readmission", is_regression=False):
+    if is_regression:
+        metrics = evaluate_regression_model(y_true, y_pred)
+        with open(f"ml/reports/{prefix}_metrics.json", "w") as f:
+            json.dump(metrics, f, indent=4)
+        return metrics
+        
     metrics = evaluate_model(y_true, y_pred, y_prob)
     
     with open(f"ml/reports/{prefix}_metrics.json", "w") as f:

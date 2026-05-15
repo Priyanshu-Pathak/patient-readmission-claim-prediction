@@ -1,0 +1,31 @@
+{
+    "rows": 14000,
+    "columns": 20,
+    "missing_values": {
+        "age": 0,
+        "gender": 0,
+        "weight": 0,
+        "bmi": 0,
+        "no_of_dependents": 0,
+        "heart rate": 0,
+        "time_in_hospital": 0,
+        "payer_code": 0,
+        "num_lab_procedures": 0,
+        "num_procedures": 0,
+        "num_medications": 0,
+        "number_outpatient": 0,
+        "number_emergency": 0,
+        "number_inpatient": 0,
+        "number_diagnoses": 0,
+        "insulin": 0,
+        "change": 0,
+        "diabetesMed": 0,
+        "readmitted": 0,
+        "claim": 0
+    },
+    "excluded_columns": [
+        "smoker",
+        "regular_exercise"
+    ],
+    "exclusion_reason": "Contains noisy decimal/negative values instead of clean binary labels."
+}

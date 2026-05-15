@@ -1121,6 +1121,56 @@ Phase 8.2 — Readmission Model Sanity Audit
 ### Next Step
 Phase 9 — Claim ML Service
 
+## Update — Phase 9 (Claim ML Service)
+
+### Completed Phase
+Phase 9 — Claim ML Service
+
+### Dataset Findings
+- **Data Source:** `final_adjusted_healthcare_dataset.xlsx`
+- **Rows:** 14,000
+- **Claim Column Characteristics:** Found 0 missing values. The target contains continuous numeric values ranging from `$1,424.31` to `$12,951.51`.
+- **Leakage Prevention:** Specifically excluded the `readmitted` and `claim` columns from the feature set to strictly predict the claim amount from pre-outcome predictors. Also safely dropped noisy `smoker` and `regular_exercise` fields exactly as done in Phase 8.
+
+### Selected Features (18 total)
+`age`, `gender`, `weight`, `bmi`, `no_of_dependents`, `heart rate`, `time_in_hospital`, `payer_code`, `num_lab_procedures`, `num_procedures`, `num_medications`, `number_outpatient`, `number_emergency`, `number_inpatient`, `number_diagnoses`, `insulin`, `change`, `diabetesMed`
+
+### Model Approach
+- Reused shared Scikit-Learn `ColumnTransformer` utilities (`SimpleImputer` + `StandardScaler` / `OneHotEncoder`).
+- Implemented a `RandomForestRegressor(n_estimators=100, random_state=42)` within a `Pipeline`.
+- Generated safe regression performance metrics.
+
+### Metrics Generated
+- **MAE:** `212.76`
+- **RMSE:** `372.78`
+- **R2:** `0.972`
+- **MAPE:** `3.31%`
+
+### Artifacts Generated
+- `ml/artifacts/claim_model.joblib` (Tracked via `.gitignore`)
+- `ml/artifacts/claim_features.json`
+- `ml/artifacts/claim_metadata.json`
+- `ml/reports/claim_data_profile.json`
+- `ml/reports/claim_metrics.json`
+
+### Backend Files Created/Modified
+- Created `backend/app/schemas/claim.py` and `backend/app/services/claim_service.py` to seamlessly execute regression predictions safely.
+- Created `backend/app/api/v1/endpoints/claim.py`.
+- Updated `backend/app/api/v1/router.py` to expose `/api/v1/claim/predict`.
+- Configured `.env.example` and `config.py` with `CLAIM_MODEL_PATH`, `CLAIM_FEATURE_SCHEMA_PATH`, and `CLAIM_METADATA_PATH`.
+
+### Endpoint Behavior
+- Exposes `POST /api/v1/claim/predict`.
+- Returns HTTP 503 strictly if `claim_model.joblib` is missing.
+- When successfully loaded, it cleanly returns the `predicted_claim_amount` along with a robust financial disclaimer. Fake values are prohibited.
+
+### Validation Result
+- Python `compileall` successfully passed across all changed components.
+- Verified dynamic FastAPI route bindings: `['/api/v1/openapi.json', '/docs', '/docs/oauth2-redirect', '/redoc', '/api/v1/health/', '/api/v1/health/ready', '/api/v1/readmission/predict', '/api/v1/claim/predict']`.
+
+### Next Step
+Phase 10 — UI Integration
+
 ---
 
 ## 11. Current Next Step
@@ -1128,7 +1178,7 @@ Phase 9 — Claim ML Service
 The next step is:
 
 ```text
-Run Phase 9 — Claim ML Service
+Run Phase 10 — UI Integration
 ```
 
-Proceed to build the backend foundation for the Claim Prediction service, similar to Phase 7.
+Proceed to build the frontend client hooks, dashboard UI updates, and data fetching integration to seamlessly query both ML microservices.

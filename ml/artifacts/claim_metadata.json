@@ -1,0 +1,4 @@
+{
+    "target_column": "claim",
+    "description": "Continuous claim amount predicted from pre-outcome features"
+}
