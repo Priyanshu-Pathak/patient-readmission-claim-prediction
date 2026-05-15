@@ -1,0 +1,50 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+
+# Env
+.env
+.env.local
+.env.production
+*.env
+!.env.example
+
+# Data and generated reports
+data/raw/*
+!data/raw/.gitkeep
+data/private/*
+!data/private/.gitkeep
+reports/generated/*
+!reports/generated/.gitkeep
+uploads/*
+!uploads/.gitkeep
+*.pdf
+
+# ML Artifacts
+*.joblib
+ml/artifacts/*
+!ml/artifacts/.gitkeep
+ml/models/*
+!ml/models/.gitkeep
+ml/reports/*
+!ml/reports/.gitkeep
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Keep empty folders
+!**/.gitkeep
