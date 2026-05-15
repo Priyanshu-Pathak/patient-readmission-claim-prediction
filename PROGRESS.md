@@ -1101,6 +1101,26 @@ Phase 8 — Model Engineering for Readmission Prediction
 ### Next Step
 Phase 9 — Claim ML Service
 
+## Update — Phase 8.2 (Model Sanity Audit)
+
+### Completed Phase
+Phase 8.2 — Readmission Model Sanity Audit
+
+### Audit Findings
+- **Data Leakage Check:** Passed. Verified that the final 18 features exclude `readmitted`, `claim`, ID columns, and post-outcome leakage variables.
+- **Target Mapping Check:** Passed. Verified that the `<30` class strictly maps to `1` (positive risk), and `>30` maps to `0` (negative risk). This mapping is officially documented in `ml/artifacts/readmission_metadata.json`.
+- **Noisy Columns Check:** Passed. Verified that `smoker` and `regular_exercise` were safely excluded due to dirty continuous negative/decimal data. Reason documented in `readmission_data_profile.json`.
+
+### Git Tracking Updates
+- Verified that heavy `*.joblib` files correctly remain ignored.
+- Updated `.gitignore` to explicitly allow tracking of lightweight, text-based JSON/MD ML artifacts (such as `readmission_features.json`, `readmission_metadata.json`, and the metrics reports) so these crucial schemas are synced properly.
+
+### Validation Result
+- Python syntax (`compileall`) passed again across `backend/app`, `ml/src`, and `ml/scripts`.
+
+### Next Step
+Phase 9 — Claim ML Service
+
 ---
 
 ## 11. Current Next Step

@@ -35,10 +35,13 @@ uploads/*
 *.joblib
 ml/artifacts/*
 !ml/artifacts/.gitkeep
+!ml/artifacts/*.json
+!ml/artifacts/*.md
 ml/models/*
 !ml/models/.gitkeep
 ml/reports/*
 !ml/reports/.gitkeep
+!ml/reports/*.json
 
 # OS/editor
 .DS_Store
