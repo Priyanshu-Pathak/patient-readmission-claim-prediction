@@ -96,9 +96,8 @@ Because artifacts are not committed, you must build the models locally.
 ---
 
 ## 📸 Screenshots
-*(Placeholder for UI showcases)*
+*(Manual screenshots pending)*
 
-- **Landing Page**: *[Screenshot to be added]*
-- **Prediction Dashboard**: *[Screenshot to be added]*
-- **Result Cards**: *[Screenshot to be added]*
-- **Architecture Flow**: *[Screenshot to be added]*
+![Landing Page](docs/screenshots/landing-page.png)
+![Prediction Dashboard](docs/screenshots/predict-dashboard.png)
+![Prediction Results](docs/screenshots/prediction-results.png)
