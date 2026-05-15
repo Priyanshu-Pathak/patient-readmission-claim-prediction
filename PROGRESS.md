@@ -170,29 +170,29 @@ Complete
 
 ### Phase 4 — Frontend Design System Foundation
 
-- [ ] Configure global design tokens
-- [ ] Define healthcare analytics visual system
-- [ ] Create AppShell
+- [x] Configure global design tokens
+- [x] Define healthcare analytics visual system
+- [x] Create AppShell
 - [ ] Create PublicLayout
 - [ ] Create ProtectedLayout
 - [ ] Create Sidebar
 - [ ] Create Topbar
-- [ ] Create MetricCard
-- [ ] Create RiskBadge
+- [x] Create MetricCard
+- [x] Create RiskBadge (StatusBadge)
 - [ ] Create ConfidenceIndicator
-- [ ] Create StatusPill
-- [ ] Create DashboardPanel
+- [x] Create StatusPill (StatusBadge)
+- [x] Create DashboardPanel (SurfaceCard)
 - [ ] Create ChartCard
 - [ ] Create LoadingTimeline
 - [ ] Create ErrorPanel
 - [ ] Create EmptyState
-- [ ] Add restrained animation utilities
-- [ ] Verify frontend build
+- [x] Add restrained animation utilities
+- [x] Verify frontend build
 
 Status:
 
 ```text
-Not started
+Complete (Foundation)
 ```
 
 ---
@@ -855,12 +855,44 @@ Phase 4 — Frontend Design System Foundation
 
 ---
 
+## Update — Phase 4
+
+### Completed Phase
+Phase 4 — Frontend Design System Foundation
+
+### Files Changed
+- `frontend/src/app/globals.css`
+- `frontend/src/app/page.tsx`
+- `frontend/src/lib/utils.ts`
+
+### What Was Implemented
+- Configured global design tokens in Tailwind CSS v4, including deep medical slate colors, teal accents, and semantic status colors.
+- Added smooth scrolling, glassmorphism utilities (`.glass-effect`), gentle hover elevation, and `prefers-reduced-motion` fallbacks.
+- Created foundational UI components: `Container`, `SectionHeader`, `SurfaceCard`, `StatusBadge`, `MetricCard`, and `Button`.
+- Created layout component: `AppShell`.
+- Redesigned the homepage (`page.tsx`) to serve as a design system preview featuring dummy analytics metrics, risk estimation cards, triage workflows, and security disclaimers without claiming clinical efficacy.
+
+### Verification Commands Run
+- `pnpm build`
+
+### Results
+- Build passed successfully with `0` errors.
+- The visual aesthetic matches the "clinical, trustworthy, and modern" requirement without excessive animations.
+
+### Known Issues
+- Advanced layout components (Sidebar, Topbar) are pending subsequent phases.
+
+### Next Step
+Phase 5 — Public Pages
+
+---
+
 ## 11. Current Next Step
 
 The next step is:
 
 ```text
-Run Phase 4 — Frontend Design System Foundation
+Run Phase 5 — Public Pages
 ```
 
-Proceed to configure global design tokens, healthcare analytics visual system, layouts, components, and verify frontend build.
+Proceed to build the full landing page, about page, and recruiter-facing documentation pages.

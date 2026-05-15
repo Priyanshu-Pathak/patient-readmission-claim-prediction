@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* Dark futuristic/clinical base (Default to dark as requested) */
+  --background: #060b13; /* Deep medical slate/blue base */
+  --foreground: #eef2f6; /* Off-white for high contrast */
+  --muted: #111a27;
+  --muted-foreground: #8fa0b5;
+  --card: rgba(14, 21, 32, 0.7); /* Glassmorphism base */
+  --border: #1e293b;
+  
+  /* Brand accents */
+  --primary: #0ea5e9; /* Teal/Light Blue accent */
+  --primary-foreground: #ffffff;
+  --secondary: #3b82f6;
+
+  /* Status Colors */
+  --success: #10b981; /* Clinical Green */
+  --warning: #f59e0b; /* Amber */
+  --danger: #ef4444;  /* Controlled Red */
+}
+
+/* Base resets & typography */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  background-image: radial-gradient(circle at 50% -20%, rgba(14, 165, 233, 0.05), transparent 60%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Shared Utilities */
+@layer utilities {
+  .glass-effect {
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+  }
+
+  .hover-card-elevation {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .hover-card-elevation:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.1);
+    border-color: rgba(14, 165, 233, 0.3);
+  }
+
+  .focus-ring {
+    outline: none;
+  }
+  .focus-ring:focus-visible {
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
+  }
 }
