@@ -1047,6 +1047,60 @@ Inspected `ml/artifacts/`, `ml/models/`, `ml/scripts/`, and `data/sample/`. Only
 ### Next Step
 Phase 8 — Model Engineering (Notebook to Script Translation)
 
+## Update — Phase 8 (Model Engineering)
+
+### Completed Phase
+Phase 8 — Model Engineering for Readmission Prediction
+
+### Dataset Discovery Findings
+- **Filename:** `final_adjusted_healthcare_dataset.xlsx`
+- **Rows:** 50,000
+- **Columns:** 22
+- **Condition:** Found noisy decimal values in `smoker` and `regular_exercise`. Successfully identified `readmitted` column with string values `>30` and `<30`.
+
+### Data Cleaning Decisions
+- **Target Mapping:** Mapped `<30` (readmission within 30 days) to `1` (positive risk class), and `>30`/`NO` to `0` (negative class).
+- **Excluded Columns:** Dropped `smoker` and `regular_exercise` due to noisy negative/decimal values instead of binary labels, to avoid model corruption. Also dropped `claim` to prevent leakage.
+
+### Selected Features (18 total)
+`age`, `gender`, `weight`, `bmi`, `no_of_dependents`, `heart rate`, `time_in_hospital`, `payer_code`, `num_lab_procedures`, `num_procedures`, `num_medications`, `number_outpatient`, `number_emergency`, `number_inpatient`, `number_diagnoses`, `insulin`, `change`, `diabetesMed`
+
+### Model Approach Used
+- Constructed a clean Scikit-Learn `Pipeline`.
+- Used `ColumnTransformer` with `SimpleImputer(median)` + `StandardScaler` for numeric features.
+- Used `SimpleImputer(most_frequent)` + `OneHotEncoder(handle_unknown='ignore')` for categorical features (eliminating the problematic `LabelEncoder`).
+- Deployed `LogisticRegression(class_weight='balanced')` as the baseline estimator.
+
+### Files Created
+- `ml/src/__init__.py`
+- `ml/src/data_validation.py`
+- `ml/src/preprocessing.py`
+- `ml/src/model_training.py`
+- `ml/src/metrics.py`
+- `ml/src/artifact_io.py`
+- `ml/scripts/train_readmission.py`
+
+### Artifacts Generated (Local Only, GitIgnored)
+- `ml/artifacts/readmission_model.joblib`
+- `ml/artifacts/readmission_features.json`
+- `ml/artifacts/readmission_metadata.json`
+
+### Metrics Generated
+- Macro-F1: `0.930`
+- ROC-AUC: `0.985`
+- Accuracy: `0.930`
+
+### Backend Alignment Changes
+- Updated `backend/app/schemas/readmission.py` to match the exact 18 feature names derived from the `ColumnTransformer`.
+- Updated `backend/app/services/readmission_service.py` to parse the `Pydantic` schema back into a DataFrame, predict the probability via the loaded pipeline, and return active risk status.
+
+### Validation Result
+- Backend syntax compiled cleanly.
+- Routes successfully verified (`/api/v1/readmission/predict` is active).
+
+### Next Step
+Phase 9 — Claim ML Service
+
 ---
 
 ## 11. Current Next Step
@@ -1054,7 +1108,7 @@ Phase 8 — Model Engineering (Notebook to Script Translation)
 The next step is:
 
 ```text
-Run Phase 8 — Model Engineering
+Run Phase 9 — Claim ML Service
 ```
 
-Proceed to translate any existing Jupyter Notebook logic into modular Python scripts inside `ml/scripts/` to train and export the required `.joblib` model artifacts.
+Proceed to build the backend foundation for the Claim Prediction service, similar to Phase 7.
