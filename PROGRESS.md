@@ -1009,6 +1009,44 @@ Phase 6.1 — Backend Skeleton Validation and Fix Pass
 ### Next Step
 Phase 7 — Readmission ML Service
 
+## Update — Phase 7 (Readmission ML Service)
+
+### Completed Phase
+Phase 7 — Readmission ML Service
+
+### Artifact Discovery Findings
+Inspected `ml/artifacts/`, `ml/models/`, `ml/scripts/`, and `data/sample/`. Only `.gitkeep` files were found. **No trained models, preprocessors, or feature schemas are currently present.**
+
+### Files Created
+- `backend/app/schemas/readmission.py`
+- `backend/app/services/readmission_service.py`
+- `backend/app/api/v1/endpoints/readmission.py`
+- `ml/artifacts/README.md` (Lightweight documentation defining expected missing artifacts)
+
+### Files Modified
+- `backend/app/core/config.py` (Added `READMISSION_MODEL_PATH`, `READMISSION_PREPROCESSOR_PATH`, `READMISSION_FEATURE_SCHEMA_PATH`)
+- `backend/.env.example` (Added equivalent ML artifact placeholders)
+- `backend/app/api/v1/router.py` (Registered the readmission endpoint)
+
+### What Was Implemented
+- Defined comprehensive, safe Pydantic request/response schemas for diabetes readmission prediction based on standard healthcare telemetry (age, hospital stay, lab procedures, diagnoses, medications).
+- Implemented a `ReadmissionService` class capable of lazy-loading artifacts without crashing the application on startup.
+- Implemented the `POST /api/v1/readmission/predict` endpoint. Since no artifacts exist yet, the service safely traps inference requests and returns a structured `503 Service Unavailable` response explicitly stating the model is not configured.
+- Protected the integrity of the project by explicitly avoiding fake random predictions or hardcoded mock scores.
+
+### Validation Commands Run
+- `..\.venv\Scripts\python.exe -m compileall app`
+- `..\.venv\Scripts\python.exe -c "from app.main import app; print(app.title)"`
+- `..\.venv\Scripts\python.exe -c "from app.main import app; print([route.path for route in app.routes])"`
+
+### Validation Results
+- Syntax compiled cleanly (`Exit code 0`).
+- FastAPI initialized correctly (`AdmitGuard Intelligence`).
+- Readmission endpoint successfully registered alongside existing health checks: `['/api/v1/openapi.json', '/docs', '/docs/oauth2-redirect', '/redoc', '/api/v1/health/', '/api/v1/health/ready', '/api/v1/readmission/predict']`.
+
+### Next Step
+Phase 8 — Model Engineering (Notebook to Script Translation)
+
 ---
 
 ## 11. Current Next Step
@@ -1016,7 +1054,7 @@ Phase 7 — Readmission ML Service
 The next step is:
 
 ```text
-Run Phase 7 — Readmission ML Service
+Run Phase 8 — Model Engineering
 ```
 
-Proceed to implement the readmission risk service by translating the Python notebook logic into a FastAPI service, configuring model loading, and testing inference endpoints.
+Proceed to translate any existing Jupyter Notebook logic into modular Python scripts inside `ml/scripts/` to train and export the required `.joblib` model artifacts.

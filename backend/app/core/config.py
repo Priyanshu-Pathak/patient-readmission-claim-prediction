@@ -16,6 +16,11 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
 
+    # ML Artifacts
+    READMISSION_MODEL_PATH: str = "ml/artifacts/readmission_model.joblib"
+    READMISSION_PREPROCESSOR_PATH: str = "ml/artifacts/readmission_preprocessor.joblib"
+    READMISSION_FEATURE_SCHEMA_PATH: str = "ml/artifacts/readmission_features.json"
+
     # Security
     JWT_SECRET_KEY: str = "change_this_in_production_secret_key"
     ALGORITHM: str = "HS256"
