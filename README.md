@@ -8,6 +8,7 @@ Hospital readmissions are a critical quality metric and financial liability for 
 ## ✨ Key Features
 - **Readmission Risk Estimation**: Predicts 30-day readmission probability using 32 pre-outcome clinical features (leak-safe).
 - **Claim Analytics**: Estimates financial claim amounts based on 12 patient demographic and history features.
+- **Hospital Benchmarking**: Aggregate performance analytics for ~2,000 hospitals using the CMS HRRP dataset.
 - **Unified Dashboard**: A polished, responsive web interface built with modern glassmorphism UI for clear presentation.
 - **Robust Architecture**: Modular FastAPI backend supporting dual-model concurrent inference, strictly decoupled from the Next.js frontend.
 - **Safe ML Pipeline**: Fully reproducible `scikit-learn` pipeline with rigorous anti-leakage guards (ensuring post-outcome variables do not corrupt training).
@@ -45,6 +46,12 @@ The system trains on two separate, task-specific datasets to avoid feature leaka
   - RMSE: 2047.77
   - R2: 0.972
   - MAPE: 6.31%
+
+### Hospital Analytics (Benchmarking)
+- **Dataset**: `hrrp_readmissions.csv` (7,890 records)
+- **Scope**: 1,960 unique hospitals across 34 US states.
+- **Primary Metric**: Excess Readmission Ratio (ERR).
+- **Nature**: Static historical aggregate data (Jul 2019 – Jun 2022). This is **not** an ML model output but a display of CMS-calculated statistics.
 
 ## ⚠️ Important Notes
 - **Dataset Note**: The project uses separate, task-specific datasets. The raw datasets are locally stored in `data/raw/` and explicitly ignored by Git.
@@ -87,6 +94,7 @@ Because artifacts are not committed, you must build the models locally.
 
 ## 📡 API Endpoint Summary
 - `GET /api/v1/health/` - Backend health check
+- `GET /api/v1/analytics/summary` - Returns aggregate HRRP hospital benchmarking data.
 - `POST /api/v1/readmission/predict` - Accepts ReadmissionRequest (32 features) and returns risk probability/label.
 - `POST /api/v1/claim/predict` - Accepts ClaimRequest (12 features) and returns estimated USD claim amount.
 
@@ -97,10 +105,9 @@ Because artifacts are not committed, you must build the models locally.
 - **Improvements**: Integration with live FHIR/HL7 streams, Dockerization for cloud deployment, and implementing user authentication/RBAC for secure provider access.
 
 ## 📋 Next Steps
-1. Final visual polish pass for `/predict` page.
-2. Optional UI screenshots/demo verification.
-3. Dashboard/hospital analytics page review.
-4. Final README polish for portfolio/demo use.
+1. Final project hand-off and portfolio polish.
+2. Optional SHAP/Explainability integration for prediction drivers.
+3. Dashboard filtering by condition or state.
 
 ---
 
@@ -110,4 +117,5 @@ Because artifacts are not committed, you must build the models locally.
 ![About Page](docs/screenshots/about-page.png)
 ![How It Works](docs/screenshots/how-it-works-page.png)
 ![Prediction Dashboard](docs/screenshots/predict-dashboard.png)
+![Analytics Dashboard](docs/screenshots/analytics-dashboard.png)
 ![Prediction Results](docs/screenshots/prediction-results.png)
