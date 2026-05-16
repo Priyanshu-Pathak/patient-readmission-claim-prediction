@@ -1392,8 +1392,30 @@ Phase 11A.3 — Claim Model Rebuild
 ### Next Step
 Phase 11A.4 — Frontend UI update to support the new dual-schema predict interface
 
+## Update — Phase 11A.4 (Frontend Rebuild for Dual Models)
+
+### Completed Phase
+Phase 11A.4 — Frontend Rebuild for Dual Models
+
+### Context
+The `/predict` page was updated to support the new separate task-specific datasets and schema requirements.
+
+### What Was Implemented
+- **Types & API**: Updated `frontend/src/lib/types.ts` and `frontend/src/lib/api.ts` to support `ReadmissionRequest` (32 features) and `ClaimRequest` (12 features) independently.
+- **Tabbed Interface**: Rebuilt `frontend/src/app/predict/page.tsx` into a tabbed layout (Readmission Risk vs. Claim Estimate).
+- **Form UX**: Added human-readable labels, helper text, category grouping, and dropdowns for categorical fields (like demographics, admission types, and medication indicators).
+- **Validation**: Added strict client-side validation for numeric boundaries (e.g., time_in_hospital 1-14) and required fields, complete with inline error messages and auto-clearing behaviors.
+- **Result Cards**: Upgraded the prediction result presentation with a dynamic horizontal risk bar for Readmission Risk and a large formatted currency display for Claim Estimates. Empty states and dynamic confidence notes were also implemented safely.
+
+### Validation Result
+- **Frontend Build**: `pnpm build` passed successfully (`Exit code: 0`).
+- **Dependencies**: No new large dependencies added. Types are perfectly aligned with the backend APIs.
+
 ---
 
 ## 11. Current Next Step
 
-Phase 11A.4 — Frontend update to reflect the two separate model schemas (readmission uses diabetic_data features; claim uses insurance features). Update `/predict` page accordingly.
+1. Final visual polish pass for `/predict` page
+2. Optional UI screenshots/demo verification
+3. Dashboard/hospital analytics page review
+4. Final README polish for portfolio/demo use
