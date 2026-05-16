@@ -1,6 +1,13 @@
-import { PredictionRequest, ReadmissionResponse, ClaimResponse, ApiResponse } from "./types";
+import {
+  ReadmissionRequest,
+  ClaimRequest,
+  ReadmissionResponse,
+  ClaimResponse,
+  ApiResponse,
+} from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
 
 export class ApiError extends Error {
   status: number;
@@ -10,7 +17,10 @@ export class ApiError extends Error {
   }
 }
 
-async function fetchWithHandling<T>(url: string, options: RequestInit): Promise<ApiResponse<T>> {
+async function fetchWithHandling<T>(
+  url: string,
+  options: RequestInit
+): Promise<ApiResponse<T>> {
   try {
     const res = await fetch(url, {
       ...options,
@@ -23,28 +33,29 @@ async function fetchWithHandling<T>(url: string, options: RequestInit): Promise<
     const data = await res.json();
 
     if (!res.ok) {
-      throw new ApiError(data.detail || "API Request failed", res.status);
+      throw new ApiError(
+        data.detail || data.error || "API Request failed",
+        res.status
+      );
     }
 
     return data;
-  } catch (error: any) {
-    if (error instanceof ApiError) {
-      throw error;
-    }
+  } catch (error: unknown) {
+    if (error instanceof ApiError) throw error;
     throw new ApiError("Network error or unavailable service", 503);
   }
 }
 
 export const api = {
-  predictReadmission: (payload: PredictionRequest) => 
-    fetchWithHandling<ReadmissionResponse>(`${API_BASE}/readmission/predict`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
-    
-  predictClaim: (payload: PredictionRequest) => 
-    fetchWithHandling<ClaimResponse>(`${API_BASE}/claim/predict`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  predictReadmission: (payload: ReadmissionRequest) =>
+    fetchWithHandling<ReadmissionResponse>(
+      `${API_BASE}/readmission/predict`,
+      { method: "POST", body: JSON.stringify(payload) }
+    ),
+
+  predictClaim: (payload: ClaimRequest) =>
+    fetchWithHandling<ClaimResponse>(
+      `${API_BASE}/claim/predict`,
+      { method: "POST", body: JSON.stringify(payload) }
+    ),
 };
