@@ -3,6 +3,7 @@ import {
   ClaimRequest,
   ReadmissionResponse,
   ClaimResponse,
+  AnalyticsSummary,
   ApiResponse,
 } from "./types";
 
@@ -57,5 +58,12 @@ export const api = {
     fetchWithHandling<ClaimResponse>(
       `${API_BASE}/claim/predict`,
       { method: "POST", body: JSON.stringify(payload) }
+    ),
+
+  /** Aggregate HRRP hospital benchmarking — NOT patient-level or ML output */
+  getAnalyticsSummary: () =>
+    fetchWithHandling<AnalyticsSummary>(
+      `${API_BASE}/analytics/summary`,
+      { method: "GET" }
     ),
 };

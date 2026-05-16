@@ -99,5 +99,48 @@ export interface ApiResponse<T> {
   success: boolean;
   data?: T;
   error?: string | null;
-  meta?: { timestamp: string };
+  meta?: Record<string, unknown>;
+}
+
+// ─── Analytics — HRRP Hospital Benchmarking ──────────────────────────────────
+// Mirrors backend/app/schemas/analytics.py
+// Source: CMS HRRP aggregate dataset (static, Jul 2019 – Jun 2022)
+// NOT patient-level prediction. NOT claim prediction. NOT real-time monitoring.
+
+export interface ConditionSummary {
+  condition_code: string;
+  condition_label: string;
+  record_count: number;
+  average_err: number;
+  percent_above_benchmark: number;
+}
+
+export interface StateSummary {
+  state: string;
+  record_count: number;
+  average_err: number;
+  percent_above_benchmark: number;
+}
+
+export interface OutlierHospital {
+  facility_name: string;
+  state: string;
+  condition_code: string;
+  condition_label: string;
+  excess_readmission_ratio: number;
+}
+
+export interface AnalyticsSummary {
+  total_records: number;
+  total_hospitals: number;
+  total_states: number;
+  period_label: string;
+  average_excess_readmission_ratio: number;
+  percent_above_benchmark: number;
+  condition_summary: ConditionSummary[];
+  state_summary: StateSummary[];
+  top_outlier_hospitals: OutlierHospital[];
+  data_source?: string;
+  coverage_note?: string;
+  disclaimer?: string;
 }
