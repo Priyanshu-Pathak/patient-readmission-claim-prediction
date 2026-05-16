@@ -12,17 +12,17 @@ export default function Home() {
     <AppShell>
       <Container className="space-y-16 pb-16">
         {/* Hero Section */}
-        <section className="pt-16 pb-12 md:pt-24 md:pb-20 text-center max-w-4xl mx-auto flex flex-col items-center">
-          <StatusBadge status="info" label="AdmitGuard Clinical Intelligence v1.0" className="mb-8 px-4 py-1" />
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl mb-8 leading-tight">
+        <section className="pt-10 pb-8 md:pt-24 md:pb-20 text-center max-w-4xl mx-auto flex flex-col items-center">
+          <StatusBadge status="info" label="AdmitGuard Clinical Intelligence v1.0" className="mb-6 md:mb-8 px-4 py-1" />
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl mb-6 md:mb-8 leading-tight">
             Intelligent Risk Estimation for <br className="hidden md:block"/> Healthcare Workflows
           </h1>
-          <p className="text-xl text-muted-foreground mb-10 max-w-2xl leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8 md:mb-10 max-w-2xl leading-relaxed">
             A modern decision-support analytics prototype designed to forecast patient readmission risk and estimate insurance claim amounts using task-specific clinical datasets. 
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6 w-full sm:w-auto">
-            <Button variant="primary" className="h-12 px-8 text-base rounded-lg shadow-[0_0_20px_rgba(20,184,166,0.3)]">Launch Dashboard</Button>
-            <Button variant="secondary" className="h-12 px-8 text-base rounded-lg">View Batch Upload</Button>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 w-full sm:w-auto px-4 sm:px-0">
+            <Button variant="primary" className="w-full sm:w-auto h-12 px-8 text-base rounded-lg shadow-[0_0_20px_rgba(20,184,166,0.3)]">Launch Dashboard</Button>
+            <Button variant="secondary" className="w-full sm:w-auto h-12 px-8 text-base rounded-lg">View Batch Upload</Button>
           </div>
         </section>
 
