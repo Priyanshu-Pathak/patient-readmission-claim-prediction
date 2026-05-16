@@ -396,8 +396,8 @@ export default function PredictPage() {
     const fieldErr = fieldErrors[field.key];
 
     return (
-      <div key={field.key} className="mb-4">
-        <label className="block text-slate-300 font-medium mb-1">
+      <div key={field.key} className="mb-5">
+        <label className="block text-sm font-semibold text-slate-300 mb-1.5 tracking-wide">
           {field.label}
         </label>
         {field.options ? (
@@ -405,7 +405,11 @@ export default function PredictPage() {
             name={field.key}
             value={val !== null && val !== undefined ? val : ""}
             onChange={handleChange}
-            className={`bg-slate-800 border rounded px-3 py-2 w-full text-white focus:outline-none ${fieldErr ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-blue-500'}`}
+            className={`w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-4 py-2.5 transition-all outline-none focus:ring-2 ${
+              fieldErr 
+                ? 'border-red-500/50 focus:ring-red-500/40 bg-red-950/10' 
+                : 'focus:border-blue-500 focus:ring-blue-500/20 hover:border-slate-600'
+            }`}
           >
             {field.options.map(opt => (
               <option key={opt.value} value={opt.value}>
@@ -419,27 +423,41 @@ export default function PredictPage() {
             name={field.key}
             value={val !== null && val !== undefined ? val : ""}
             onChange={handleChange}
-            className={`bg-slate-800 border rounded px-3 py-2 w-full text-white focus:outline-none ${fieldErr ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-blue-500'}`}
+            className={`w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-4 py-2.5 transition-all outline-none focus:ring-2 ${
+              fieldErr 
+                ? 'border-red-500/50 focus:ring-red-500/40 bg-red-950/10' 
+                : 'focus:border-blue-500 focus:ring-blue-500/20 hover:border-slate-600'
+            }`}
           />
         )}
         {fieldErr ? (
-          <p className="text-xs text-red-400 mt-1">{fieldErr}</p>
+          <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            {fieldErr}
+          </p>
         ) : field.helper ? (
-          <p className="text-xs text-slate-500 mt-1">{field.helper}</p>
+          <p className="text-xs text-slate-500 mt-1.5">{field.helper}</p>
         ) : null}
       </div>
     );
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto text-white bg-slate-900 min-h-screen font-sans">
-      <h1 className="text-3xl font-bold mb-2">AdmitGuard Predictions</h1>
-      <p className="text-slate-400 mb-8">Clinical decision-support prototype.</p>
+    <div className="p-4 md:p-8 max-w-7xl mx-auto text-white bg-slate-900 min-h-screen font-sans selection:bg-blue-500/30">
+      <div className="mb-10">
+        <h1 className="text-4xl font-extrabold mb-3 bg-gradient-to-r from-blue-400 to-teal-300 bg-clip-text text-transparent inline-block">
+          AdmitGuard Predictions
+        </h1>
+        <p className="text-slate-400 text-lg">Clinical decision-support and financial forecasting prototype.</p>
+      </div>
 
-      <div className="flex gap-4 mb-8">
+      {/* Tabs */}
+      <div className="flex gap-2 mb-10 p-1.5 bg-slate-800/80 rounded-xl inline-flex border border-slate-700/50 shadow-inner">
         <button
-          className={`px-6 py-2 rounded-md font-medium transition-colors ${
-            tab === "re" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+          className={`px-8 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ${
+            tab === "re" 
+              ? "bg-blue-600 text-white shadow-md shadow-blue-900/30" 
+              : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
           }`}
           onClick={() => {
             setTab("re");
@@ -450,8 +468,10 @@ export default function PredictPage() {
           Readmission Risk
         </button>
         <button
-          className={`px-6 py-2 rounded-md font-medium transition-colors ${
-            tab === "cl" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+          className={`px-8 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ${
+            tab === "cl" 
+              ? "bg-teal-600 text-white shadow-md shadow-teal-900/30" 
+              : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
           }`}
           onClick={() => {
             setTab("cl");
@@ -467,10 +487,10 @@ export default function PredictPage() {
         {/* Form Column */}
         <div className="lg:col-span-2">
           {tab === "re" ? (
-            <div className="space-y-8">
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {reGroups.map(group => (
-                <div key={group.title} className="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
-                  <h3 className="text-lg font-semibold text-blue-400 mb-4 pb-2 border-b border-slate-700">
+                <div key={group.title} className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg">
+                  <h3 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-5 pb-3 border-b border-slate-700/50">
                     {group.title}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
@@ -480,10 +500,10 @@ export default function PredictPage() {
               ))}
             </div>
           ) : (
-            <div className="space-y-8">
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {clGroups.map(group => (
-                <div key={group.title} className="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
-                  <h3 className="text-lg font-semibold text-teal-400 mb-4 pb-2 border-b border-slate-700">
+                <div key={group.title} className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg">
+                  <h3 className="text-sm font-bold text-teal-400 uppercase tracking-wider mb-5 pb-3 border-b border-slate-700/50">
                     {group.title}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
@@ -494,27 +514,44 @@ export default function PredictPage() {
             </div>
           )}
 
-          <div className="mt-8">
-            {error && <p className="text-red-400 mb-4 p-3 bg-red-900/20 rounded border border-red-900/50">{error}</p>}
+          <div className="mt-10">
+            {error && (
+              <div className="mb-6 p-4 bg-red-900/20 rounded-xl border border-red-900/50 flex items-start gap-3">
+                <svg className="w-5 h-5 text-red-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <p className="text-sm text-red-400 font-medium leading-relaxed">{error}</p>
+              </div>
+            )}
             <button
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-blue-900/20 disabled:opacity-50"
+              className={`w-full font-bold py-4 px-6 rounded-xl transition-all shadow-lg flex justify-center items-center gap-3 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed ${
+                tab === "re" 
+                  ? "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 shadow-blue-900/20 text-white"
+                  : "bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 shadow-teal-900/20 text-white"
+              }`}
               onClick={submit}
               disabled={loading}
             >
-              {loading ? "Analyzing..." : (tab === "re" ? "Analyze Readmission Risk" : "Estimate Claim Amount")}
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  Processing Data...
+                </>
+              ) : (
+                tab === "re" ? "Analyze Readmission Risk" : "Estimate Claim Amount"
+              )}
             </button>
           </div>
         </div>
 
         {/* Results Column */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 sticky top-8 shadow-xl">
+          <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 sticky top-8 shadow-xl">
             <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
+              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
               Analysis Result
             </h2>
             {tab === "re" ? (
               reRes ? (
-                <div className="space-y-6">
+                <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
                   {/* Risk Label Block */}
                   <div className="p-5 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner">
                     <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Risk Level</p>
@@ -537,7 +574,7 @@ export default function PredictPage() {
                     
                     {/* Horizontal Risk Bar */}
                     {reRes.risk_probability !== null && (
-                      <div className="w-full bg-slate-800 rounded-full h-3 mb-2 overflow-hidden border border-slate-700">
+                      <div className="w-full bg-slate-800 rounded-full h-3 mb-2 overflow-hidden border border-slate-700 shadow-inner">
                         <div 
                           className={`h-full rounded-full transition-all duration-1000 ease-out ${
                             reRes.risk_probability < 0.3 ? 'bg-green-500' :
@@ -557,20 +594,21 @@ export default function PredictPage() {
                   {/* Disclaimer Block */}
                   <div className="text-xs text-slate-400 mt-6 pt-5 border-t border-slate-700/80 leading-relaxed">
                     <div className="flex items-start gap-2">
-                      <span className="font-bold text-slate-300 mt-0.5">Note:</span>
+                      <svg className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       <p>{reRes.disclaimer}</p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700 rounded-xl bg-slate-800/30">
-                  <p className="font-medium">Awaiting Data</p>
-                  <p className="text-sm mt-2 opacity-70">Submit the patient profile to view the readmission risk analysis.</p>
+                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700/60 rounded-xl bg-slate-800/30 flex flex-col items-center">
+                  <svg className="w-10 h-10 text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  <p className="font-medium text-slate-400">Awaiting Data</p>
+                  <p className="text-sm mt-2 text-slate-500 max-w-[200px]">Submit the patient profile to view the readmission risk analysis.</p>
                 </div>
               )
             ) : (
               clRes ? (
-                <div className="space-y-6">
+                <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
                   {/* Estimated Claim Block */}
                   <div className="p-6 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner flex flex-col items-center justify-center text-center">
                     <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Estimated Claim</p>
@@ -582,8 +620,9 @@ export default function PredictPage() {
 
                   {/* Optional Model Message */}
                   {clRes.confidence_note && (
-                    <div className="p-4 bg-slate-800/80 rounded-lg border border-slate-700/50">
-                      <p className="text-sm text-slate-300">
+                    <div className="p-4 bg-slate-800/80 rounded-lg border border-slate-700/50 flex items-start gap-3">
+                      <svg className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <p className="text-sm text-slate-300 leading-relaxed">
                         {clRes.confidence_note}
                       </p>
                     </div>
@@ -592,15 +631,16 @@ export default function PredictPage() {
                   {/* Disclaimer Block */}
                   <div className="text-xs text-slate-400 mt-6 pt-5 border-t border-slate-700/80 leading-relaxed">
                     <div className="flex items-start gap-2">
-                      <span className="font-bold text-slate-300 mt-0.5">Note:</span>
+                      <svg className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       <p>{clRes.disclaimer}</p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700 rounded-xl bg-slate-800/30">
-                  <p className="font-medium">Awaiting Data</p>
-                  <p className="text-sm mt-2 opacity-70">Submit the profile to view the estimated claim amount.</p>
+                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700/60 rounded-xl bg-slate-800/30 flex flex-col items-center">
+                  <svg className="w-10 h-10 text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <p className="font-medium text-slate-400">Awaiting Data</p>
+                  <p className="text-sm mt-2 text-slate-500 max-w-[200px]">Submit the profile to view the estimated claim amount.</p>
                 </div>
               )
             )}
