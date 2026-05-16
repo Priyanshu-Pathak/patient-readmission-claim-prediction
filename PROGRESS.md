@@ -1465,3 +1465,33 @@ Phase 13 — Final Portfolio Polish and Demo Readiness
 - Final git hygiene and documentation sync.
 - Optional: Add filtering capabilities to the analytics dashboard.
 
+---
+
+## Update — 2026-05-16
+
+### Completed Phase
+Phase 13 — Final Portfolio Polish and Demo Readiness
+
+### Files Changed
+- `frontend/src/app/predict/page.tsx`
+- `PROGRESS.md`
+- `README.md` (Updated in Phase 12F)
+
+### What Was Implemented
+- **Portfolio Audit**: Conducted a full end-to-end review of all frontend routes and backend services.
+- **Critical UI Fix**: Identified and resolved a navigation bug where the `AppShell` (and thus the navbar) was missing from the `/predict` route.
+- **Copy Consistency**: Verified that all pages correctly describe the dual-dataset architecture (Readmission vs. Claims) and have no stale references to deprecated datasets or algorithms (XGBoost).
+- **Data Framing**: Confirmed that the Hospital Analytics page at `/analytics` is properly framed as static HRRP benchmarking, distinct from ML predictions.
+- **Build Verification**: Successfully ran `pnpm build` on the frontend and `compileall` on the backend to ensure zero regressions or syntax errors.
+
+### Verification Results
+- **Routes**: `/`, `/about`, `/how-it-works`, `/predict`, `/analytics` all load correctly with functional navigation.
+- **ML Services**: Both Readmission and Claim prediction services are active and responding with accurate payloads.
+- **Analytics**: HRRP benchmarking data fetches and renders correctly.
+
+### Status
+**Ready for Hand-off / Demo.**
+
+### Next Recommended Step
+Final hand-off documentation and optional deployment.
+

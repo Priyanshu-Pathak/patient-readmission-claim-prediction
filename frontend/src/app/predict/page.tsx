@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { api } from "../../lib/api";
 import { ReadmissionRequest, ClaimRequest, ReadmissionResponse, ClaimResponse } from "../../lib/types";
+import { AppShell } from "@/components/layout/AppShell";
+import { Container } from "@/components/ui/Container";
 
 // --- Form Configuration ---
 
@@ -443,13 +445,14 @@ export default function PredictPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto text-white bg-slate-900 min-h-screen font-sans selection:bg-blue-500/30">
-      <div className="mb-10">
-        <h1 className="text-4xl font-extrabold mb-3 bg-gradient-to-r from-blue-400 to-teal-300 bg-clip-text text-transparent inline-block">
-          AdmitGuard Predictions
-        </h1>
-        <p className="text-slate-400 text-lg">Clinical decision-support and financial forecasting prototype.</p>
-      </div>
+    <AppShell>
+      <Container className="pb-16 selection:bg-blue-500/30">
+        <div className="mb-10">
+          <h1 className="text-4xl font-extrabold mb-3 bg-gradient-to-r from-blue-400 to-teal-300 bg-clip-text text-transparent inline-block">
+            AdmitGuard Predictions
+          </h1>
+          <p className="text-slate-400 text-lg">Clinical decision-support and financial forecasting prototype.</p>
+        </div>
 
       {/* Tabs */}
       <div className="flex gap-2 mb-10 p-1.5 bg-slate-800/80 rounded-xl inline-flex border border-slate-700/50 shadow-inner">
@@ -647,6 +650,7 @@ export default function PredictPage() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </Container>
+  </AppShell>
+);
 }
