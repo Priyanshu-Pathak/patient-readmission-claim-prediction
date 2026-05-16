@@ -1285,8 +1285,61 @@ Local binary artifacts deleted (were Git-ignored):
 ### Next Step
 Phase 11A.2 — Readmission Model Rebuild (using `diabetic_data.csv`)
 
+## Update — Phase 11A.2 (Readmission Model Rebuild)
+
+### Completed Phase
+Phase 11A.2 — Readmission Model Rebuild
+
+### Dataset Used
+- `data/raw/readmission/diabetic_data.csv` (UCI Diabetes 130-US Hospitals, 1999-2008)
+- Raw shape: 101,766 rows x 50 columns
+
+### Data Preparation
+- Removed 2,423 rows with death/hospice discharge_disposition_id codes (11,13,14,19,20,21) — readmission is logically impossible for these
+- Target mapped: `<30` → 1 (positive), `>30` / `NO` → 0 (negative)
+- Final training shape: 99,343 rows
+
+### Feature Selection (32 features)
+- **Numeric (8)**: time_in_hospital, num_lab_procedures, num_procedures, num_medications, number_outpatient, number_emergency, number_inpatient, number_diagnoses
+- **Categorical (24)**: race, gender, age, admission_type_id*, admission_source_id*, diag_1/2/3, max_glu_serum, A1Cresult, 11 medication columns, insulin, change, diabetesMed
+- *Treated as categorical strings despite integer codes to prevent ordinal misinterpretation
+- **Dropped**: encounter_id, patient_nbr (IDs), weight/payer_code/medical_specialty (high missing), discharge_disposition_id (post-outcome leakage), 10 near-zero-variance combination drug columns
+
+### Model
+- Algorithm: LogisticRegression(class_weight='balanced', solver='lbfgs', max_iter=1000)
+- Train/Test: 80/20 stratified split
+
+### Honest Metrics
+- Accuracy: 0.648
+- Precision (positive class): 0.170
+- Recall (positive class): 0.538
+- Macro-F1: 0.514
+- ROC-AUC: 0.637
+
+### Artifacts Generated
+- `ml/artifacts/readmission_model.joblib` (Git-ignored local binary)
+- `ml/artifacts/readmission_features.json` (tracked)
+- `ml/artifacts/readmission_metadata.json` (tracked)
+- `ml/reports/readmission_metrics.json` (tracked)
+- `ml/reports/readmission_classification_report.json` (tracked)
+- `ml/reports/readmission_confusion_matrix.json` (tracked)
+- `ml/reports/readmission_data_profile.json` (tracked)
+
+### Backend Changes
+- Replaced `backend/app/schemas/readmission.py` — new 32-field schema aligned with diabetic_data.csv
+- Updated `backend/app/services/readmission_service.py` — handles ID type casting, returns predicted_class + threshold
+- Rewrote `ml/scripts/train_readmission.py` — clean leakage-safe pipeline from diabetic_data.csv
+
+### Runtime Test Result
+- `POST /api/v1/readmission/predict` — HTTP 200, model_status: active, real prediction returned ✓
+- Invalid payload — HTTP 422 validation error ✓
+- `POST /api/v1/claim/predict` — HTTP 422 (expected; old schema still in place, rebuild in Phase 11A.3) ✓
+
+### Next Step
+Phase 11A.3 — Claim Model Rebuild (using `healthinsurance_claims.csv`)
+
 ---
 
 ## 11. Current Next Step
 
-Phase 11A.2 — Clean readmission model rebuild using the UCI Diabetes 130-US Hospitals dataset (`data/raw/readmission/diabetic_data.csv`).
+Phase 11A.3 — Claim model rebuild using `data/raw/claims/healthinsurance_claims.csv`, aligned with the new task-specific strategy.
