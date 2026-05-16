@@ -5,10 +5,16 @@ import { ReadmissionRequest, ClaimRequest, ReadmissionResponse, ClaimResponse } 
 
 // --- Form Configuration ---
 
+type FieldOption = {
+  label: string;
+  value: string | number;
+};
+
 type FieldConfig = {
   key: string;
   label: string;
   helper?: string;
+  options?: FieldOption[];
 };
 
 type GroupConfig = {
@@ -16,21 +22,98 @@ type GroupConfig = {
   fields: FieldConfig[];
 };
 
+const medOptions: FieldOption[] = [
+  { label: "No", value: "No" },
+  { label: "Steady", value: "Steady" },
+  { label: "Up", value: "Up" },
+  { label: "Down", value: "Down" },
+];
+
 const reGroups: GroupConfig[] = [
   {
     title: "Patient Profile",
     fields: [
-      { key: "race", label: "Race" },
-      { key: "gender", label: "Gender" },
-      { key: "age", label: "Age Group", helper: "Bracket representation (e.g., [70-80))" },
+      {
+        key: "race",
+        label: "Race",
+        options: [
+          { label: "Caucasian", value: "Caucasian" },
+          { label: "AfricanAmerican", value: "AfricanAmerican" },
+          { label: "Asian", value: "Asian" },
+          { label: "Hispanic", value: "Hispanic" },
+          { label: "Other", value: "Other" },
+          { label: "?", value: "?" },
+        ],
+      },
+      {
+        key: "gender",
+        label: "Gender",
+        options: [
+          { label: "Female", value: "Female" },
+          { label: "Male", value: "Male" },
+          { label: "Unknown/Invalid", value: "Unknown/Invalid" },
+        ],
+      },
+      {
+        key: "age",
+        label: "Age Group",
+        helper: "Bracket representation (e.g., [70-80))",
+        options: [
+          { label: "[0-10)", value: "[0-10)" },
+          { label: "[10-20)", value: "[10-20)" },
+          { label: "[20-30)", value: "[20-30)" },
+          { label: "[30-40)", value: "[30-40)" },
+          { label: "[40-50)", value: "[40-50)" },
+          { label: "[50-60)", value: "[50-60)" },
+          { label: "[60-70)", value: "[60-70)" },
+          { label: "[70-80)", value: "[70-80)" },
+          { label: "[80-90)", value: "[80-90)" },
+          { label: "[90-100)", value: "[90-100)" },
+        ],
+      },
     ],
   },
   {
     title: "Encounter Details",
     fields: [
-      { key: "admission_type_id", label: "Admission Type ID", helper: "Numeric category from the original hospital dataset." },
-      { key: "admission_source_id", label: "Admission Source ID", helper: "Numeric category showing how the patient entered care." },
-      { key: "time_in_hospital", label: "Time in Hospital", helper: "Number of days between admission and discharge (1-14)." },
+      {
+        key: "admission_type_id",
+        label: "Admission Type ID",
+        helper: "Numeric category from the original hospital dataset.",
+        options: [
+          { label: "1 (Emergency)", value: "1" },
+          { label: "2 (Urgent)", value: "2" },
+          { label: "3 (Elective)", value: "3" },
+          { label: "4 (Newborn)", value: "4" },
+          { label: "5 (Not Available)", value: "5" },
+          { label: "6 (NULL)", value: "6" },
+          { label: "7 (Trauma Center)", value: "7" },
+          { label: "8 (Not Mapped)", value: "8" },
+        ],
+      },
+      {
+        key: "admission_source_id",
+        label: "Admission Source ID",
+        helper: "Numeric category showing how the patient entered care.",
+        options: [
+          { label: "1 (Physician Referral)", value: "1" },
+          { label: "2 (Clinic Referral)", value: "2" },
+          { label: "3 (HMO Referral)", value: "3" },
+          { label: "4 (Transfer from a hospital)", value: "4" },
+          { label: "5 (Transfer from a SNF)", value: "5" },
+          { label: "6 (Transfer from another health care facility)", value: "6" },
+          { label: "7 (Emergency Room)", value: "7" },
+          { label: "8 (Court/Law Enforcement)", value: "8" },
+          { label: "9 (Not Available)", value: "9" },
+          { label: "11 (Normal Delivery)", value: "11" },
+          { label: "17 (NULL)", value: "17" },
+        ],
+      },
+      {
+        key: "time_in_hospital",
+        label: "Time in Hospital",
+        helper: "Number of days between admission and discharge (1-14).",
+      },
     ],
   },
   {
@@ -56,22 +139,57 @@ const reGroups: GroupConfig[] = [
   {
     title: "Diabetes Medication Indicators",
     fields: [
-      { key: "max_glu_serum", label: "Max Glucose Serum" },
-      { key: "A1Cresult", label: "A1C Test Result", helper: "Recent blood sugar control indicator, if available." },
-      { key: "metformin", label: "Metformin Dosage Change" },
-      { key: "repaglinide", label: "Repaglinide Dosage Change" },
-      { key: "nateglinide", label: "Nateglinide Dosage Change" },
-      { key: "chlorpropamide", label: "Chlorpropamide Dosage Change" },
-      { key: "glimepiride", label: "Glimepiride Dosage Change" },
-      { key: "glipizide", label: "Glipizide Dosage Change" },
-      { key: "glyburide", label: "Glyburide Dosage Change" },
-      { key: "pioglitazone", label: "Pioglitazone Dosage Change" },
-      { key: "rosiglitazone", label: "Rosiglitazone Dosage Change" },
-      { key: "acarbose", label: "Acarbose Dosage Change" },
-      { key: "miglitol", label: "Miglitol Dosage Change" },
-      { key: "insulin", label: "Insulin Dosage Change" },
-      { key: "change", label: "Diabetic Med Change", helper: "Was there a change in diabetic medications?" },
-      { key: "diabetesMed", label: "Diabetes Medication Prescribed", helper: "Whether any diabetes medication was prescribed." },
+      {
+        key: "max_glu_serum",
+        label: "Max Glucose Serum",
+        options: [
+          { label: "None", value: "None" },
+          { label: "Norm", value: "Norm" },
+          { label: ">200", value: ">200" },
+          { label: ">300", value: ">300" },
+        ],
+      },
+      {
+        key: "A1Cresult",
+        label: "A1C Test Result",
+        helper: "Recent blood sugar control indicator, if available.",
+        options: [
+          { label: "None", value: "None" },
+          { label: "Norm", value: "Norm" },
+          { label: ">7", value: ">7" },
+          { label: ">8", value: ">8" },
+        ],
+      },
+      { key: "metformin", label: "Metformin Dosage Change", options: medOptions },
+      { key: "repaglinide", label: "Repaglinide Dosage Change", options: medOptions },
+      { key: "nateglinide", label: "Nateglinide Dosage Change", options: medOptions },
+      { key: "chlorpropamide", label: "Chlorpropamide Dosage Change", options: medOptions },
+      { key: "glimepiride", label: "Glimepiride Dosage Change", options: medOptions },
+      { key: "glipizide", label: "Glipizide Dosage Change", options: medOptions },
+      { key: "glyburide", label: "Glyburide Dosage Change", options: medOptions },
+      { key: "pioglitazone", label: "Pioglitazone Dosage Change", options: medOptions },
+      { key: "rosiglitazone", label: "Rosiglitazone Dosage Change", options: medOptions },
+      { key: "acarbose", label: "Acarbose Dosage Change", options: medOptions },
+      { key: "miglitol", label: "Miglitol Dosage Change", options: medOptions },
+      { key: "insulin", label: "Insulin Dosage Change", options: medOptions },
+      {
+        key: "change",
+        label: "Diabetic Med Change",
+        helper: "Was there a change in diabetic medications?",
+        options: [
+          { label: "No", value: "No" },
+          { label: "Ch", value: "Ch" },
+        ],
+      },
+      {
+        key: "diabetesMed",
+        label: "Diabetes Medication Prescribed",
+        helper: "Whether any diabetes medication was prescribed.",
+        options: [
+          { label: "No", value: "No" },
+          { label: "Yes", value: "Yes" },
+        ],
+      },
     ],
   },
 ];
@@ -81,7 +199,15 @@ const clGroups: GroupConfig[] = [
     title: "Patient Profile",
     fields: [
       { key: "age", label: "Age", helper: "Age in years." },
-      { key: "sex", label: "Sex", helper: "Biological sex (male/female)." },
+      {
+        key: "sex",
+        label: "Sex",
+        helper: "Biological sex (male/female).",
+        options: [
+          { label: "Male", value: "male" },
+          { label: "Female", value: "female" },
+        ],
+      },
       { key: "weight", label: "Weight", helper: "Weight in kg." },
       { key: "bmi", label: "Body Mass Index (BMI)" },
     ],
@@ -89,8 +215,32 @@ const clGroups: GroupConfig[] = [
   {
     title: "Lifestyle & Risk Factors",
     fields: [
-      { key: "smoker", label: "Smoker", helper: "Status (1 = smoker, 0 = non-smoker)." },
-      { key: "hereditary_diseases", label: "Hereditary Disease History", helper: "Known inherited or family-linked condition category." },
+      {
+        key: "smoker",
+        label: "Smoker",
+        helper: "Status (1 = smoker, 0 = non-smoker).",
+        options: [
+          { label: "No (0)", value: 0 },
+          { label: "Yes (1)", value: 1 },
+        ],
+      },
+      {
+        key: "hereditary_diseases",
+        label: "Hereditary Disease History",
+        helper: "Known inherited or family-linked condition category.",
+        options: [
+          { label: "NoDisease", value: "NoDisease" },
+          { label: "Epilepsy", value: "Epilepsy" },
+          { label: "EyeDisease", value: "EyeDisease" },
+          { label: "Alzheimer", value: "Alzheimer" },
+          { label: "Arthritis", value: "Arthritis" },
+          { label: "HeartDisease", value: "HeartDisease" },
+          { label: "Diabetes", value: "Diabetes" },
+          { label: "Cancer", value: "Cancer" },
+          { label: "High BP", value: "High BP" },
+          { label: "Obesity", value: "Obesity" },
+        ],
+      },
       { key: "no_of_dependents", label: "Number of Dependents" },
     ],
   },
@@ -98,8 +248,24 @@ const clGroups: GroupConfig[] = [
     title: "Medical History",
     fields: [
       { key: "bloodpressure", label: "Blood Pressure" },
-      { key: "diabetes", label: "Diabetes", helper: "1 = has diabetes, 0 = does not." },
-      { key: "regular_ex", label: "Regular Exercise", helper: "Lifestyle indicator from the claims dataset (1 = yes, 0 = no)." },
+      {
+        key: "diabetes",
+        label: "Diabetes",
+        helper: "1 = has diabetes, 0 = does not.",
+        options: [
+          { label: "No (0)", value: 0 },
+          { label: "Yes (1)", value: 1 },
+        ],
+      },
+      {
+        key: "regular_ex",
+        label: "Regular Exercise",
+        helper: "Lifestyle indicator from the claims dataset (1 = yes, 0 = no).",
+        options: [
+          { label: "No (0)", value: 0 },
+          { label: "Yes (1)", value: 1 },
+        ],
+      },
     ],
   },
   {
@@ -142,12 +308,15 @@ export default function PredictPage() {
 
   const handleRe = (e: any) => {
     const { name, value, type } = e.target;
-    setReForm(p => ({ ...p, [name]: type === "number" ? Number(value) : value }));
+    // For selects, type is 'select-one', so we also need to check if the state currently holds a number
+    const isNumberField = typeof (reForm as any)[name] === "number";
+    setReForm(p => ({ ...p, [name]: (type === "number" || isNumberField) ? Number(value) : value }));
   };
 
   const handleCl = (e: any) => {
     const { name, value, type } = e.target;
-    setClForm(p => ({ ...p, [name]: type === "number" ? Number(value) : value }));
+    const isNumberField = typeof (clForm as any)[name] === "number";
+    setClForm(p => ({ ...p, [name]: (type === "number" || isNumberField) ? Number(value) : value }));
   };
 
   const submit = async () => {
@@ -180,13 +349,28 @@ export default function PredictPage() {
         <label className="block text-slate-300 font-medium mb-1">
           {field.label}
         </label>
-        <input
-          type={isNum ? "number" : "text"}
-          name={field.key}
-          value={val !== null && val !== undefined ? val : ""}
-          onChange={handleChange}
-          className="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-full text-white focus:outline-none focus:border-blue-500"
-        />
+        {field.options ? (
+          <select
+            name={field.key}
+            value={val !== null && val !== undefined ? val : ""}
+            onChange={handleChange}
+            className="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-full text-white focus:outline-none focus:border-blue-500"
+          >
+            {field.options.map(opt => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type={isNum ? "number" : "text"}
+            name={field.key}
+            value={val !== null && val !== undefined ? val : ""}
+            onChange={handleChange}
+            className="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-full text-white focus:outline-none focus:border-blue-500"
+          />
+        )}
         {field.helper && (
           <p className="text-xs text-slate-500 mt-1">{field.helper}</p>
         )}
