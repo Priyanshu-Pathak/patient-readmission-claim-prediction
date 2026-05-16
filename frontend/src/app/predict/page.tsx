@@ -399,7 +399,7 @@ export default function PredictPage() {
 
     return (
       <div key={field.key} className="mb-5">
-        <label className="block text-sm font-semibold text-slate-300 mb-1.5 tracking-wide">
+        <label className="block text-xs font-bold text-muted-foreground mb-1.5 tracking-wider uppercase">
           {field.label}
         </label>
         {field.options ? (
@@ -407,10 +407,10 @@ export default function PredictPage() {
             name={field.key}
             value={val !== null && val !== undefined ? val : ""}
             onChange={handleChange}
-            className={`w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-4 py-2.5 transition-all outline-none focus:ring-2 ${
+            className={`w-full bg-background border border-border text-foreground rounded px-4 py-2.5 transition-all outline-none focus:ring-1 ${
               fieldErr 
-                ? 'border-red-500/50 focus:ring-red-500/40 bg-red-950/10' 
-                : 'focus:border-blue-500 focus:ring-blue-500/20 hover:border-slate-600'
+                ? 'border-danger/50 focus:ring-danger/40 bg-danger/10' 
+                : 'focus:border-primary focus:ring-primary/20 hover:border-muted-foreground/50'
             }`}
           >
             {field.options.map(opt => (
@@ -425,10 +425,10 @@ export default function PredictPage() {
             name={field.key}
             value={val !== null && val !== undefined ? val : ""}
             onChange={handleChange}
-            className={`w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-4 py-2.5 transition-all outline-none focus:ring-2 ${
+            className={`w-full bg-background border border-border text-foreground rounded px-4 py-2.5 transition-all outline-none focus:ring-1 ${
               fieldErr 
-                ? 'border-red-500/50 focus:ring-red-500/40 bg-red-950/10' 
-                : 'focus:border-blue-500 focus:ring-blue-500/20 hover:border-slate-600'
+                ? 'border-danger/50 focus:ring-danger/40 bg-danger/10' 
+                : 'focus:border-primary focus:ring-primary/20 hover:border-muted-foreground/50'
             }`}
           />
         )}
@@ -446,21 +446,21 @@ export default function PredictPage() {
 
   return (
     <AppShell>
-      <Container className="pb-16 selection:bg-blue-500/30">
-        <div className="mb-10">
-          <h1 className="text-4xl font-extrabold mb-3 bg-gradient-to-r from-blue-400 to-teal-300 bg-clip-text text-transparent inline-block">
-            AdmitGuard Predictions
+      <Container className="pb-16 pt-12">
+        <div className="mb-10 max-w-2xl">
+          <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight mb-4 text-foreground">
+            Risk & Claim <span className="text-primary font-bold">Prediction</span>
           </h1>
-          <p className="text-slate-400 text-lg">Clinical decision-support and financial forecasting prototype.</p>
+          <p className="text-muted-foreground text-lg leading-relaxed">Submit patient profiles against our trained models. Ensure you provide accurate demographic and clinical features to obtain reliable readmission and cost estimates.</p>
         </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-10 p-1.5 bg-slate-800/80 rounded-xl inline-flex border border-slate-700/50 shadow-inner">
+      <div className="flex gap-2 mb-10 p-1 bg-muted/20 rounded inline-flex border border-border">
         <button
-          className={`px-8 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ${
+          className={`px-8 py-2.5 rounded font-bold text-xs tracking-wider uppercase transition-all duration-300 ${
             tab === "re" 
-              ? "bg-blue-600 text-white shadow-md shadow-blue-900/30" 
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+              ? "bg-primary text-primary-foreground" 
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
           }`}
           onClick={() => {
             setTab("re");
@@ -471,10 +471,10 @@ export default function PredictPage() {
           Readmission Risk
         </button>
         <button
-          className={`px-8 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ${
+          className={`px-8 py-2.5 rounded font-bold text-xs tracking-wider uppercase transition-all duration-300 ${
             tab === "cl" 
-              ? "bg-teal-600 text-white shadow-md shadow-teal-900/30" 
-              : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+              ? "bg-secondary text-secondary-foreground" 
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
           }`}
           onClick={() => {
             setTab("cl");
@@ -490,10 +490,10 @@ export default function PredictPage() {
         {/* Form Column */}
         <div className="lg:col-span-2">
           {tab === "re" ? (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {reGroups.map(group => (
-                <div key={group.title} className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg">
-                  <h3 className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-5 pb-3 border-b border-slate-700/50">
+                <div key={group.title} className="surface-panel p-6 rounded border-border">
+                  <h3 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-5 pb-3 border-b border-border/50">
                     {group.title}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
@@ -503,10 +503,10 @@ export default function PredictPage() {
               ))}
             </div>
           ) : (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {clGroups.map(group => (
-                <div key={group.title} className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg">
-                  <h3 className="text-sm font-bold text-teal-400 uppercase tracking-wider mb-5 pb-3 border-b border-slate-700/50">
+                <div key={group.title} className="surface-panel p-6 rounded border-border">
+                  <h3 className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-5 pb-3 border-b border-border/50">
                     {group.title}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
@@ -517,29 +517,29 @@ export default function PredictPage() {
             </div>
           )}
 
-          <div className="mt-10">
+          <div className="mt-8">
             {error && (
-              <div className="mb-6 p-4 bg-red-900/20 rounded-xl border border-red-900/50 flex items-start gap-3">
-                <svg className="w-5 h-5 text-red-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                <p className="text-sm text-red-400 font-medium leading-relaxed">{error}</p>
+              <div className="mb-6 p-4 surface-panel bg-danger/10 border-danger/30 rounded flex items-start gap-3">
+                <svg className="w-5 h-5 text-danger mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <p className="text-sm text-danger font-medium leading-relaxed">{error}</p>
               </div>
             )}
             <button
-              className={`w-full font-bold py-4 px-6 rounded-xl transition-all shadow-lg flex justify-center items-center gap-3 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`w-full font-bold py-4 px-6 rounded transition-all flex justify-center items-center gap-3 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed ${
                 tab === "re" 
-                  ? "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 shadow-blue-900/20 text-white"
-                  : "bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 shadow-teal-900/20 text-white"
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                  : "bg-secondary hover:bg-secondary/90 text-secondary-foreground"
               }`}
               onClick={submit}
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  <svg className="animate-spin h-5 w-5 text-current" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                   Processing Data...
                 </>
               ) : (
-                tab === "re" ? "Analyze Readmission Risk" : "Estimate Claim Amount"
+                tab === "re" ? "ANALYZE READMISSION RISK" : "ESTIMATE CLAIM AMOUNT"
               )}
             </button>
           </div>
@@ -547,47 +547,46 @@ export default function PredictPage() {
 
         {/* Results Column */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 sticky top-8 shadow-xl">
-            <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
-              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          <div className="surface-panel p-6 rounded border-border sticky top-24">
+            <h2 className="text-lg font-semibold mb-6 flex items-center gap-2 text-foreground uppercase tracking-widest text-[10px]">
               Analysis Result
             </h2>
             {tab === "re" ? (
               reRes ? (
                 <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
                   {/* Risk Label Block */}
-                  <div className="p-5 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner">
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Risk Level</p>
-                    <p className={`text-3xl font-extrabold tracking-tight ${
-                      reRes.risk_label === 'High' ? 'text-red-400' :
-                      reRes.risk_label === 'Medium' ? 'text-yellow-400' : 'text-green-400'
+                  <div className="flex flex-col gap-1">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Risk Level</p>
+                    <p className={`text-4xl font-extrabold tracking-tight ${
+                      reRes.risk_label === 'High' ? 'text-danger' :
+                      reRes.risk_label === 'Medium' ? 'text-warning' : 'text-primary'
                     }`}>
                       {reRes.risk_label}
                     </p>
                   </div>
 
                   {/* Probability & Risk Bar Block */}
-                  <div className="p-5 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner">
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Probability</p>
-                    <div className="flex items-baseline gap-2 mb-3">
-                      <p className="text-4xl font-light text-white">
+                  <div className="flex flex-col gap-2 pt-4 border-t border-border/50">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Probability</p>
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <p className="text-3xl font-light text-foreground">
                         {reRes.risk_probability !== null ? `${(reRes.risk_probability * 100).toFixed(1)}%` : "N/A"}
                       </p>
                     </div>
                     
                     {/* Horizontal Risk Bar */}
                     {reRes.risk_probability !== null && (
-                      <div className="w-full bg-slate-800 rounded-full h-3 mb-2 overflow-hidden border border-slate-700 shadow-inner">
+                      <div className="w-full bg-muted rounded h-1.5 mb-2 overflow-hidden">
                         <div 
-                          className={`h-full rounded-full transition-all duration-1000 ease-out ${
-                            reRes.risk_probability < 0.3 ? 'bg-green-500' :
-                            reRes.risk_probability < 0.6 ? 'bg-yellow-500' : 'bg-red-500'
+                          className={`h-full transition-all duration-1000 ease-out ${
+                            reRes.risk_probability < 0.3 ? 'bg-primary' :
+                            reRes.risk_probability < 0.6 ? 'bg-warning' : 'bg-danger'
                           }`}
                           style={{ width: `${Math.min(100, Math.max(0, reRes.risk_probability * 100))}%` }}
                         ></div>
                       </div>
                     )}
-                    <div className="flex justify-between text-[10px] text-slate-500 font-medium px-1">
+                    <div className="flex justify-between text-[10px] text-muted-foreground font-medium">
                       <span>Low (0-30%)</span>
                       <span>Mod (30-60%)</span>
                       <span>High (60%+)</span>
@@ -595,55 +594,59 @@ export default function PredictPage() {
                   </div>
 
                   {/* Disclaimer Block */}
-                  <div className="text-xs text-slate-400 mt-6 pt-5 border-t border-slate-700/80 leading-relaxed">
+                  <div className="text-xs text-muted-foreground mt-6 pt-5 border-t border-border/80 leading-relaxed">
                     <div className="flex items-start gap-2">
-                      <svg className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <svg className="w-4 h-4 text-primary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       <p>{reRes.disclaimer}</p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700/60 rounded-xl bg-slate-800/30 flex flex-col items-center">
-                  <svg className="w-10 h-10 text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                  <p className="font-medium text-slate-400">Awaiting Data</p>
-                  <p className="text-sm mt-2 text-slate-500 max-w-[200px]">Submit the patient profile to view the readmission risk analysis.</p>
+                <div className="text-muted-foreground text-center py-16 px-4 surface-panel border border-dashed rounded flex flex-col items-center">
+                  <div className="w-10 h-10 border border-muted-foreground/30 flex items-center justify-center mb-4">
+                    <span className="text-xl">+</span>
+                  </div>
+                  <p className="font-semibold text-[10px] uppercase tracking-widest text-foreground">Awaiting Data</p>
+                  <p className="text-sm mt-2 max-w-[200px]">Submit the patient profile to view the readmission risk analysis.</p>
                 </div>
               )
             ) : (
               clRes ? (
                 <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
                   {/* Estimated Claim Block */}
-                  <div className="p-6 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner flex flex-col items-center justify-center text-center">
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Estimated Claim</p>
-                    <p className="text-5xl font-extrabold text-teal-400 tracking-tight drop-shadow-sm">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Estimated Claim</p>
+                    <p className="text-4xl font-extrabold text-secondary tracking-tight">
                       ${clRes.predicted_claim_amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </p>
-                    <p className="text-sm text-teal-600/70 mt-2 font-medium">USD</p>
+                    <p className="text-sm text-secondary/70 mt-1 font-medium">USD</p>
                   </div>
 
                   {/* Optional Model Message */}
                   {clRes.confidence_note && (
-                    <div className="p-4 bg-slate-800/80 rounded-lg border border-slate-700/50 flex items-start gap-3">
-                      <svg className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      <p className="text-sm text-slate-300 leading-relaxed">
+                    <div className="pt-4 border-t border-border/50">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Model Note</p>
+                      <p className="text-sm text-foreground leading-relaxed">
                         {clRes.confidence_note}
                       </p>
                     </div>
                   )}
 
                   {/* Disclaimer Block */}
-                  <div className="text-xs text-slate-400 mt-6 pt-5 border-t border-slate-700/80 leading-relaxed">
+                  <div className="text-xs text-muted-foreground mt-6 pt-5 border-t border-border/80 leading-relaxed">
                     <div className="flex items-start gap-2">
-                      <svg className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <svg className="w-4 h-4 text-secondary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       <p>{clRes.disclaimer}</p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700/60 rounded-xl bg-slate-800/30 flex flex-col items-center">
-                  <svg className="w-10 h-10 text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  <p className="font-medium text-slate-400">Awaiting Data</p>
-                  <p className="text-sm mt-2 text-slate-500 max-w-[200px]">Submit the profile to view the estimated claim amount.</p>
+                <div className="text-muted-foreground text-center py-16 px-4 surface-panel border border-dashed rounded flex flex-col items-center">
+                  <div className="w-10 h-10 border border-muted-foreground/30 flex items-center justify-center mb-4">
+                    <span className="text-xl">+</span>
+                  </div>
+                  <p className="font-semibold text-[10px] uppercase tracking-widest text-foreground">Awaiting Data</p>
+                  <p className="text-sm mt-2 max-w-[200px]">Submit the profile to view the estimated claim amount.</p>
                 </div>
               )
             )}

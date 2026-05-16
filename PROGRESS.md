@@ -1529,3 +1529,37 @@ Phase 14 — Live Deployment and Public Launch
 ### Next Recommended Step
 Post-launch monitoring and feature expansion (Filtering/Explainability).
 
+---
+
+## Update - Phase 15B (Visual Overhaul)
+
+### Completed Phase
+Phase 15B - Stitch-based frontend visual overhaul.
+
+### Files Changed
+- frontend/src/app/globals.css
+- frontend/src/components/layout/AppShell.tsx
+- frontend/src/app/page.tsx
+- frontend/src/app/about/page.tsx
+- frontend/src/app/how-it-works/page.tsx
+- frontend/src/app/predict/page.tsx
+- frontend/src/app/analytics/page.tsx
+
+### What Was Implemented
+- **Design Alignment**: Executed a comprehensive visual redesign based on Stitch MCP guidance and design system specifications.
+- **Colors**: Implemented deep medical slate backgrounds (#0b1326), vibrant teal accents (#14b8a6), and structured thin-bordered panels (surface-panel).
+- **Theme Overhaul**: Removed legacy glassmorphism styles and applied a unified "Corporate/Clinical" aesthetic globally.
+- **Component Refactoring**: Redesigned AppShell navigation, Landing Page (two-column hero with CSS abstract mock), About/How-It-Works pages, Predict form layout, and Analytics dashboard to match the new dark, high-density layout constraints.
+- **Integrity Maintained**: Ensured all existing API contracts, backend ML pipelines, and predictive functionality remain exactly as they were.
+
+### Verification Results
+- **Build**: pnpm build passed with 0 errors (TypeScript errors patched on Analytics route).
+- **Routes**: Verified /, /about, /how-it-works, /predict, and /analytics for structural layout compliance.
+- **Safety Constraints**: No fake data or unsupported clinical metrics were added to the UI.
+
+### Status
+**Visual Redesign Complete.**
+
+### Next Recommended Step
+Phase 15C - Component extraction and code stabilization, or proceed to feature expansion if requested.
+

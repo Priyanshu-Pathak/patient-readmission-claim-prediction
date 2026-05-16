@@ -1,68 +1,69 @@
 import React from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Container } from "@/components/ui/Container";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { SurfaceCard } from "@/components/ui/SurfaceCard";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 
 export default function HowItWorksPage() {
   const steps = [
-    { title: "Data Validation & Preprocessing", desc: "Incoming patient records are strictly validated via Pydantic schemas. Missing values are imputed, and categorical variables are encoded using the identical leakage-safe pipelines used during model training." },
-    { title: "Readmission Risk Modeling", desc: "A Logistic Regression model evaluates the patient's vitals, lab results, and encounter history to output a leakage-safe probability of 30-day readmission." },
-    { title: "Claim Amount Estimation", desc: "An independent Random Forest Regressor estimates potential insurance claim amounts based on patient demographic and historical features." },
-    { title: "Explainability Layer", desc: "SHAP (SHapley Additive exPlanations) values are computed to identify exactly which patient features (e.g., elevated A1C, number of diagnoses) drove the specific risk score." },
-    { title: "Report Generation", desc: "The insights are bundled into an immutable, professional PDF report stored securely and accessible only to authorized analysts." },
+    { title: "Data Validation", desc: "Incoming patient records are strictly validated via Pydantic schemas. Missing values are imputed, and categorical variables are encoded using leakage-safe pipelines." },
+    { title: "Readmission Modeling", desc: "A Logistic Regression model evaluates the patient's vitals, lab results, and encounter history to output a probability of 30-day readmission." },
+    { title: "Claim Estimation", desc: "An independent Random Forest Regressor estimates potential insurance claim amounts based on demographic and historical features." },
+    { title: "Explainability", desc: "SHAP values are computed to identify exactly which patient features drove the specific risk score." }
   ];
 
   return (
     <AppShell>
-      <Container className="space-y-16 pb-16">
-        <section className="pt-16 pb-12 max-w-4xl mx-auto text-center flex flex-col items-center">
-          <StatusBadge status="info" label="Architecture & Workflow" className="mb-8 px-4 py-1" />
-          <h1 className="text-5xl font-extrabold tracking-tight mb-8">
-            How AdmitGuard Works
+      <Container className="space-y-16 pb-16 pt-12">
+        <section className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full surface-panel mb-6 border border-border">
+            <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Architecture</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight mb-6 leading-tight text-foreground">
+            How <span className="text-primary font-bold">AdmitGuard</span> Works
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="text-lg text-muted-foreground leading-relaxed mb-10">
             A transparent look into the machine learning pipeline, data flow, and deployment architecture powering the analytics engine.
           </p>
         </section>
 
-        <section className="max-w-4xl mx-auto space-y-8">
-          <SectionHeader title="The Inference Pipeline" description="Step-by-step execution for patient risk scoring." />
+        <section className="max-w-4xl">
+          <h2 className="text-2xl font-semibold mb-6 text-foreground">The Inference Pipeline</h2>
           
-          <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
+          <div className="space-y-4">
             {steps.map((step, idx) => (
-              <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-primary text-primary-foreground font-bold shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md">
+              <div key={idx} className="surface-panel p-6 rounded border-border flex items-start gap-6 hover-card-elevation">
+                <div className="flex items-center justify-center w-8 h-8 rounded bg-primary/10 border border-primary/20 text-primary font-bold shrink-0">
                   {idx + 1}
                 </div>
-                <SurfaceCard className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] hoverEffect">
-                  <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground">{step.desc}</p>
-                </SurfaceCard>
+                <div>
+                  <h3 className="font-semibold text-lg text-foreground mb-1">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="max-w-4xl mx-auto pt-12">
-          <SectionHeader title="Deployment Architecture" />
-          <SurfaceCard className="bg-muted/30">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-              <div>
-                <h4 className="font-semibold text-foreground mb-2">Frontend (Next.js)</h4>
-                <p className="text-muted-foreground">Deployed on Vercel. Handles UI rendering, Google OAuth state, and responsive data visualizations via Tailwind CSS.</p>
+        <section className="max-w-4xl pt-8">
+          <h2 className="text-2xl font-semibold mb-6 text-foreground">Deployment Architecture</h2>
+          <div className="surface-panel p-8 rounded border-border">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="flex flex-col gap-2">
+                <div className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Frontend</div>
+                <h4 className="font-semibold text-foreground">Next.js on Vercel</h4>
+                <p className="text-sm text-muted-foreground">Handles UI rendering, state, and responsive data visualizations via Tailwind CSS.</p>
               </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-2">Backend (FastAPI)</h4>
-                <p className="text-muted-foreground">Deployed on Render/Railway. Manages RBAC, API versioning, input validation, and executes the Joblib ML artifacts.</p>
+              <div className="flex flex-col gap-2">
+                <div className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Backend</div>
+                <h4 className="font-semibold text-foreground">FastAPI on Render</h4>
+                <p className="text-sm text-muted-foreground">Manages API versioning, input validation, and executes the Joblib ML artifacts.</p>
               </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-2">Database (PostgreSQL)</h4>
-                <p className="text-muted-foreground">Managed relational store containing user profiles, batch job states, prediction history, and tamper-evident audit logs.</p>
+              <div className="flex flex-col gap-2">
+                <div className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Models</div>
+                <h4 className="font-semibold text-foreground">Scikit-Learn Joblib</h4>
+                <p className="text-sm text-muted-foreground">Pre-trained on historical CSV dumps, serialized, and loaded into backend memory.</p>
               </div>
             </div>
-          </SurfaceCard>
+          </div>
         </section>
       </Container>
     </AppShell>

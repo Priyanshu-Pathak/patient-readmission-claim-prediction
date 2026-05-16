@@ -14,28 +14,33 @@
   --color-warning: var(--warning);
   --color-danger: var(--danger);
 
-  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: var(--font-sans-fallback);
+  --font-mono: var(--font-mono-fallback);
 }
 
 :root {
-  /* Dark futuristic/clinical base (Default to dark as requested) */
-  --background: #0f172a; /* Deep medical slate base (Stitch recommended) */
-  --foreground: #eef2f6; /* Off-white for high contrast */
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --card: rgba(15, 23, 42, 0.7); /* Glassmorphism base Level 1 */
-  --border: rgba(255, 255, 255, 0.1); /* Stitch recommended 10% white border */
+  /* Stitch Deep Medical Slate Base */
+  --background: #0b1326;
+  --foreground: #dae2fd;
+  
+  --muted: #131b2e;
+  --muted-foreground: #bbcac6;
+  
+  --card: #060e20; /* Darker structured panel */
+  --border: #2d3449; /* Thin line */
   
   /* Brand accents */
-  --primary: #14b8a6; /* Vibrant Teal (Stitch recommended) */
-  --primary-foreground: #ffffff;
+  --primary: #14b8a6; /* Vibrant Teal */
+  --primary-foreground: #003731;
   --secondary: #38bdf8; /* Sky Blue accent */
-
+  
   /* Status Colors */
-  --success: #14b8a6; /* Clinical Teal */
-  --warning: #f59e0b; /* Amber */
-  --danger: #ef4444;  /* Controlled Red */
+  --success: #14b8a6;
+  --warning: #f59e0b;
+  --danger: #ffb4ab;
+
+  --font-sans-fallback: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono-fallback: 'JetBrains Mono', 'Courier New', Courier, monospace;
 }
 
 /* Base resets & typography */
@@ -47,8 +52,6 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  background-image: radial-gradient(circle at 50% -20%, rgba(20, 184, 166, 0.05), transparent 60%);
-  background-attachment: fixed;
   min-height: 100vh;
 }
 
@@ -67,21 +70,18 @@ body {
 
 /* Shared Utilities */
 @layer utilities {
-  .glass-effect {
+  .surface-panel {
     background: var(--card);
-    backdrop-filter: blur(20px); /* Stitch recommended 20px blur */
     border: 1px solid var(--border);
   }
 
   .hover-card-elevation {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
   }
   
   .hover-card-elevation:hover {
-    transform: translateY(-2px);
-    background: rgba(15, 23, 42, 0.8);
-    box-shadow: 0 0 15px rgba(20, 184, 166, 0.2); /* Stitch recommended teal glow */
-    border-color: rgba(20, 184, 166, 0.3);
+    background: #131b2e;
+    border-color: rgba(20, 184, 166, 0.4);
   }
 
   .focus-ring {
