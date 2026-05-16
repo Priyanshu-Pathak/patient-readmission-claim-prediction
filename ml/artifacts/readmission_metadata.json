@@ -1,6 +1,0 @@
-{
-    "target_column": "readmitted",
-    "positive_class": 1,
-    "negative_class": 0,
-    "description": "<30 maps to 1, >30/NO maps to 0"
-}

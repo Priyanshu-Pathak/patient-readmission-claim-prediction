@@ -1245,6 +1245,48 @@ The system is fully developed and locally validated. The next recommended step i
 
 ---
 
+## Update — Phase 11A.1 (Dataset Recovery Reset and Data Layout Audit)
+
+### Completed Phase
+Phase 11A.1 — Dataset Recovery Reset and Data Layout Audit
+
+### Context
+The previous fused dataset `final_adjusted_healthcare_dataset.xlsx` was removed because it was created by an invalid row-level join of two structurally unrelated datasets (readmission encounters + insurance claims) with no shared patient identifiers. All model artifacts produced from this dataset are invalidated.
+
+### Data Layout Verified
+All expected raw datasets confirmed present and Git-ignored:
+- `data/raw/readmission/diabetic_data.csv` ✓
+- `data/raw/readmission/IDs_mapping.csv` ✓
+- `data/raw/claims/healthinsurance_claims.csv` ✓
+- `data/raw/hospital_analytics/hrrp_readmissions.csv` ✓
+- `data/raw/optional_baselines/hospital_readmissions_small.csv` ✓
+
+### Stale Artifacts Removed
+Removed from Git tracking (were generated from the invalid fused dataset):
+- `ml/artifacts/readmission_features.json`
+- `ml/artifacts/readmission_metadata.json`
+- `ml/artifacts/claim_features.json`
+- `ml/artifacts/claim_metadata.json`
+- `ml/reports/readmission_metrics.json`
+- `ml/reports/readmission_data_profile.json`
+- `ml/reports/readmission_classification_report.json`
+- `ml/reports/readmission_confusion_matrix.json`
+- `ml/reports/claim_metrics.json`
+- `ml/reports/claim_data_profile.json`
+
+Local binary artifacts deleted (were Git-ignored):
+- `ml/artifacts/readmission_model.joblib`
+- `ml/artifacts/claim_model.joblib`
+
+### Files Created
+- `data/DATA_MANIFEST.md` — documents all datasets, their tasks, and deprecated dataset note
+- `docs/reports/dataset_recovery_plan.md` — explains why row-level fusion was invalid, new strategy, and next steps
+
+### Next Step
+Phase 11A.2 — Readmission Model Rebuild (using `diabetic_data.csv`)
+
+---
+
 ## 11. Current Next Step
 
-All PLAN.md phases are complete! No further action is required unless new scope is added.
+Phase 11A.2 — Clean readmission model rebuild using the UCI Diabetes 130-US Hospitals dataset (`data/raw/readmission/diabetic_data.csv`).
