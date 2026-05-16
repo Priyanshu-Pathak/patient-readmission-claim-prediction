@@ -18,7 +18,7 @@ export default function Home() {
             Intelligent Risk Estimation for <br className="hidden md:block"/> Healthcare Workflows
           </h1>
           <p className="text-xl text-muted-foreground mb-10 max-w-2xl leading-relaxed">
-            A modern decision-support analytics preview designed to forecast diabetes patient readmission likelihood and estimate associated claim burden. 
+            A modern decision-support analytics prototype designed to forecast patient readmission risk and estimate insurance claim amounts using task-specific clinical datasets. 
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6 w-full sm:w-auto">
             <Button variant="primary" className="h-12 px-8 text-base rounded-lg shadow-[0_0_20px_rgba(20,184,166,0.3)]">Launch Dashboard</Button>
@@ -29,8 +29,8 @@ export default function Home() {
         {/* Analytics Preview Metrics */}
         <section className="max-w-6xl mx-auto">
           <SectionHeader 
-            title="Cohort Overview" 
-            description="At-a-glance metrics for the current patient cohort." 
+            title="Hospital Benchmarking" 
+            description="Aggregate hospital-level metrics (HRRP-style) for clinical performance review." 
             className="text-center md:text-left mb-10"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -41,16 +41,16 @@ export default function Home() {
               description="Patients this month"
             />
             <MetricCard 
-              title="High Risk Readmission" 
+              title="Avg. Readmission Rate" 
               value="14.2%" 
               trend={{ value: "+1.1%", isPositive: false }} 
-              description="Probability > 75%"
+              description="National Benchmarking"
             />
             <MetricCard 
-              title="Est. Claim Burden" 
-              value="$4.2M" 
-              trend={{ value: "-$200k", isPositive: true }} 
-              description="Projected 30-day"
+              title="Avg. Claim Amount" 
+              value="$13.4k" 
+              trend={{ value: "-$200", isPositive: true }} 
+              description="Historical Claims Data"
             />
             <MetricCard 
               title="Model Confidence" 
@@ -74,7 +74,7 @@ export default function Home() {
                 <StatusBadge status="danger" label="High Risk" />
               </div>
               <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
-                Patient #8271 exhibits a 78% likelihood of 30-day readmission driven by A1C levels and recent emergency visits.
+                Identify systemic drivers for 30-day readmission risk using explainable AI models and task-specific datasets.
               </p>
               <div className="pt-5 border-t border-border/50">
                 <Button variant="outline" className="w-full text-sm h-10 border-primary/20 hover:border-primary/50 hover:text-primary">View Patient Profile</Button>
@@ -87,7 +87,7 @@ export default function Home() {
                 <StatusBadge status="warning" label="Elevated" />
               </div>
               <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
-                Estimated claim amount is projected at $12,450, exceeding the baseline cohort average by 24%.
+                Estimate insurance claim amounts based on historical patient demographics and clinical history features.
               </p>
               <div className="pt-5 border-t border-border/50">
                 <Button variant="outline" className="w-full text-sm h-10 border-primary/20 hover:border-primary/50 hover:text-primary">Analyze Cost Drivers</Button>

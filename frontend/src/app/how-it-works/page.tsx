@@ -7,9 +7,9 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 
 export default function HowItWorksPage() {
   const steps = [
-    { title: "Data Validation & Preprocessing", desc: "Incoming patient records are strictly validated via Pydantic schemas. Missing values are imputed, and categorical variables are encoded using the identical Scikit-learn pipelines used during model training." },
-    { title: "Readmission Risk Modeling", desc: "An XGBoost classifier evaluates the patient's vitals, lab results, and encounter history to output a calibrated probability of 30-day readmission." },
-    { title: "Claim Forecasting", desc: "A secondary regression model (or actuarial baseline) estimates the potential financial claim burden associated with the predicted readmission risk." },
+    { title: "Data Validation & Preprocessing", desc: "Incoming patient records are strictly validated via Pydantic schemas. Missing values are imputed, and categorical variables are encoded using the identical leakage-safe pipelines used during model training." },
+    { title: "Readmission Risk Modeling", desc: "A Logistic Regression model evaluates the patient's vitals, lab results, and encounter history to output a leakage-safe probability of 30-day readmission." },
+    { title: "Claim Amount Estimation", desc: "An independent Random Forest Regressor estimates potential insurance claim amounts based on patient demographic and historical features." },
     { title: "Explainability Layer", desc: "SHAP (SHapley Additive exPlanations) values are computed to identify exactly which patient features (e.g., elevated A1C, number of diagnoses) drove the specific risk score." },
     { title: "Report Generation", desc: "The insights are bundled into an immutable, professional PDF report stored securely and accessible only to authorized analysts." },
   ];

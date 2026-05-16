@@ -30,7 +30,7 @@ export default function AboutPage() {
           <SurfaceCard className="space-y-5 border-t-2 border-t-secondary/50">
             <h3 className="text-2xl font-semibold tracking-tight">Dataset & Scope</h3>
             <p className="text-base text-muted-foreground leading-relaxed">
-              The models are trained on publicly available, de-identified diabetes datasets (such as the UCI Diabetes dataset). The scope includes predicting 30-day readmission likelihood and forecasting estimated claim burdens for cohort analysis.
+              The platform utilizes independent, de-identified datasets for clinical research. The scope includes separate tasks for predicting 30-day readmission risk (Logistic Regression) and estimating insurance claim amounts (Random Forest) using task-specific clinical data.
             </p>
           </SurfaceCard>
 
