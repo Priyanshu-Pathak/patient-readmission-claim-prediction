@@ -508,55 +508,99 @@ export default function PredictPage() {
 
         {/* Results Column */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 sticky top-8">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              Result
+          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 sticky top-8 shadow-xl">
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
+              Analysis Result
             </h2>
             {tab === "re" ? (
               reRes ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
-                    <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">Risk Level</p>
-                    <p className={`text-2xl font-bold ${
+                <div className="space-y-6">
+                  {/* Risk Label Block */}
+                  <div className="p-5 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Risk Level</p>
+                    <p className={`text-3xl font-extrabold tracking-tight ${
                       reRes.risk_label === 'High' ? 'text-red-400' :
                       reRes.risk_label === 'Medium' ? 'text-yellow-400' : 'text-green-400'
                     }`}>
                       {reRes.risk_label}
                     </p>
                   </div>
-                  <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
-                    <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">Probability</p>
-                    <p className="text-3xl font-light text-blue-400">
-                      {reRes.risk_probability !== null ? `${(reRes.risk_probability * 100).toFixed(1)}%` : "N/A"}
-                    </p>
+
+                  {/* Probability & Risk Bar Block */}
+                  <div className="p-5 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Probability</p>
+                    <div className="flex items-baseline gap-2 mb-3">
+                      <p className="text-4xl font-light text-white">
+                        {reRes.risk_probability !== null ? `${(reRes.risk_probability * 100).toFixed(1)}%` : "N/A"}
+                      </p>
+                    </div>
+                    
+                    {/* Horizontal Risk Bar */}
+                    {reRes.risk_probability !== null && (
+                      <div className="w-full bg-slate-800 rounded-full h-3 mb-2 overflow-hidden border border-slate-700">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-1000 ease-out ${
+                            reRes.risk_probability < 0.3 ? 'bg-green-500' :
+                            reRes.risk_probability < 0.6 ? 'bg-yellow-500' : 'bg-red-500'
+                          }`}
+                          style={{ width: `${Math.min(100, Math.max(0, reRes.risk_probability * 100))}%` }}
+                        ></div>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-[10px] text-slate-500 font-medium px-1">
+                      <span>Low (0-30%)</span>
+                      <span>Mod (30-60%)</span>
+                      <span>High (60%+)</span>
+                    </div>
                   </div>
-                  <div className="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-700">
-                    <p className="font-semibold mb-1">Note:</p>
-                    <p>{reRes.disclaimer}</p>
+
+                  {/* Disclaimer Block */}
+                  <div className="text-xs text-slate-400 mt-6 pt-5 border-t border-slate-700/80 leading-relaxed">
+                    <div className="flex items-start gap-2">
+                      <span className="font-bold text-slate-300 mt-0.5">Note:</span>
+                      <p>{reRes.disclaimer}</p>
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-500 text-center py-12 border-2 border-dashed border-slate-700 rounded-lg">
-                  Submit the form to view readmission risk analysis.
+                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700 rounded-xl bg-slate-800/30">
+                  <p className="font-medium">Awaiting Data</p>
+                  <p className="text-sm mt-2 opacity-70">Submit the patient profile to view the readmission risk analysis.</p>
                 </div>
               )
             ) : (
               clRes ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
-                    <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">Estimated Claim</p>
-                    <p className="text-3xl font-bold text-teal-400">
-                      ${clRes.predicted_claim_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                <div className="space-y-6">
+                  {/* Estimated Claim Block */}
+                  <div className="p-6 bg-slate-900/80 rounded-xl border border-slate-700/80 shadow-inner flex flex-col items-center justify-center text-center">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Estimated Claim</p>
+                    <p className="text-5xl font-extrabold text-teal-400 tracking-tight drop-shadow-sm">
+                      ${clRes.predicted_claim_amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </p>
+                    <p className="text-sm text-teal-600/70 mt-2 font-medium">USD</p>
                   </div>
-                  <div className="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-700">
-                    <p className="font-semibold mb-1">Note:</p>
-                    <p>{clRes.disclaimer}</p>
+
+                  {/* Optional Model Message */}
+                  {clRes.confidence_note && (
+                    <div className="p-4 bg-slate-800/80 rounded-lg border border-slate-700/50">
+                      <p className="text-sm text-slate-300">
+                        {clRes.confidence_note}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Disclaimer Block */}
+                  <div className="text-xs text-slate-400 mt-6 pt-5 border-t border-slate-700/80 leading-relaxed">
+                    <div className="flex items-start gap-2">
+                      <span className="font-bold text-slate-300 mt-0.5">Note:</span>
+                      <p>{clRes.disclaimer}</p>
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-500 text-center py-12 border-2 border-dashed border-slate-700 rounded-lg">
-                  Submit the form to view estimated claim amount.
+                <div className="text-slate-500 text-center py-16 px-4 border-2 border-dashed border-slate-700 rounded-xl bg-slate-800/30">
+                  <p className="font-medium">Awaiting Data</p>
+                  <p className="text-sm mt-2 opacity-70">Submit the profile to view the estimated claim amount.</p>
                 </div>
               )
             )}
