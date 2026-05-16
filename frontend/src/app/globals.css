@@ -91,3 +91,26 @@ body {
     box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
   }
 }
+
+/* Print Styles for Report Modal */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide the AppShell navigation and footer */
+  nav, header, footer {
+    display: none !important;
+  }
+
+  /* Ensure background of the body and html doesn't show dark */
+  html, body {
+    background-color: white !important;
+  }
+}
