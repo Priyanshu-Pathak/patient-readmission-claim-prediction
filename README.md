@@ -2,6 +2,9 @@
 
 > A clinical decision-support and analytics prototype providing patient readmission risk estimation and estimated insurance claim analytics.
 
+### 🌐 [Live Demo (admitguard.site)](https://admitguard.site)
+*Note: The backend is hosted on a free Render instance and may take 30-60 seconds to wake up on the first request.*
+
 ## 📌 Problem Statement
 Hospital readmissions are a critical quality metric and financial liability for healthcare organizations. Accurately identifying high-risk patients prior to discharge allows clinical teams to intervene with targeted care plans, reducing the likelihood of avoidable readmissions. Simultaneously, understanding estimated insurance claim amounts helps financial planning and resource allocation. AdmitGuard serves as a foundational prototype to bridge clinical operational data with machine learning, enabling proactive risk management.
 
@@ -55,8 +58,17 @@ The system trains on two separate, task-specific datasets to avoid feature leaka
 
 ## ⚠️ Important Notes
 - **Dataset Note**: The project uses separate, task-specific datasets. The raw datasets are locally stored in `data/raw/` and explicitly ignored by Git.
-- **Artifact Note**: Large binary `.joblib` model artifacts are also ignored by `.gitignore`. They must be generated locally using the training scripts before running the backend.
+- **Artifact Note**: Large binary `.joblib` model artifacts are also ignored by `.gitignore`. They must be generated locally using the training scripts before running the backend locally.
 - **Disclaimer**: This platform is a *prototype/decision-support tool*. It is **not** HIPAA compliant, does **not** have clinical approval, and does **not** provide medical or financial advice.
+
+## 🌐 Live Deployment
+AdmitGuard is live and accessible for demonstration:
+- **Frontend**: [admitguard.site](https://admitguard.site) (Deployed on Vercel via Namecheap)
+- **Backend API**: [admitguard-api.onrender.com](https://admitguard-api.onrender.com) (Deployed on Render)
+- **API Documentation**: [Interactive Swagger UI](https://admitguard-api.onrender.com/docs)
+- **Analytics Data**: [Public JSON Summary](https://admitguard-api.onrender.com/api/v1/analytics/summary)
+
+*Note: As this uses Render's free tier, the backend may "spin down" after inactivity. If the app appears slow initially, please allow up to 60 seconds for the service to wake up.*
 
 ## 🚀 Local Setup Instructions
 

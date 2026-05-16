@@ -33,14 +33,16 @@ This guide describes how to deploy the AdmitGuard Intelligence platform to **Ren
 
 ---
 
-## 🔗 Connection Checklist
+## 🔗 Live Environment (Production)
 
-1.  **Step 1**: Deploy the Backend to Render.
-2.  **Step 2**: Copy the Render URL (e.g., `https://admitguard-api.onrender.com`).
-3.  **Step 3**: Deploy the Frontend to Vercel, providing the Render URL + `/api/v1` as the `NEXT_PUBLIC_API_BASE_URL`.
-4.  **Step 4**: Copy the Vercel URL (e.g., `https://admitguard.vercel.app`).
-5.  **Step 5**: Go back to Render Environment Variables and update `BACKEND_CORS_ORIGINS` to include the Vercel URL.
-6.  **Step 6**: Restart the Render service to apply the new CORS policy.
+- **Frontend (Vercel)**: [https://admitguard.site](https://admitguard.site)
+- **Backend (Render)**: [https://admitguard-api.onrender.com](https://admitguard-api.onrender.com)
+- **API Base URL**: `https://admitguard-api.onrender.com/api/v1`
+
+### Final Configuration Settings
+- **Vercel `NEXT_PUBLIC_API_BASE_URL`**: `https://admitguard-api.onrender.com/api/v1`
+- **Render `BACKEND_CORS_ORIGINS`**: `["https://admitguard.site", "https://admitguard.vercel.app"]`
+- **Namecheap Configuration**: `admitguard.site` is CNAME-mapped to the Vercel deployment.
 
 ---
 

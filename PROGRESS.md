@@ -1493,5 +1493,39 @@ Phase 13 — Final Portfolio Polish and Demo Readiness
 **Ready for Hand-off / Demo.**
 
 ### Next Recommended Step
-Final hand-off documentation and optional deployment.
+Phase 14 — Live Deployment and Public Launch
+- Deploy backend to Render.
+- Deploy frontend to Vercel with custom domain.
+- Verify live API connectivity and CORS.
+
+---
+
+## Update — 2026-05-16
+
+### Completed Phase
+Phase 14 — Live Deployment and Public Launch
+
+### Files Changed
+- `README.md`
+- `DEPLOYMENT.md`
+- `PROGRESS.md`
+- `DEMO_SCRIPT.md` (Updated in Phase 13B)
+
+### What Was Implemented
+- **Live Deployment**: Successfully launched AdmitGuard Intelligence to the public web.
+- **Backend Hosting**: Deployed FastAPI services to **Render** with force-tracked model artifacts.
+- **Frontend Hosting**: Deployed Next.js application to **Vercel** with a custom **Namecheap** domain (`admitguard.site`).
+- **Domain Mapping**: Configured CNAME records and Vercel aliasing for the production site.
+- **CORS Resolution**: Updated backend security policies to allow cross-origin requests from the live production domain.
+- **Final Documentation**: Updated all user-facing documentation with verified live links and operational warnings (Render free-tier sleep cycles).
+
+### Live Links
+- **Platform**: [https://admitguard.site](https://admitguard.site)
+- **API Docs**: [https://admitguard-api.onrender.com/docs](https://admitguard-api.onrender.com/docs)
+
+### Status
+**🚀 Live and Operational.**
+
+### Next Recommended Step
+Post-launch monitoring and feature expansion (Filtering/Explainability).
 

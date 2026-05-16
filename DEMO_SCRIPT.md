@@ -4,6 +4,15 @@
 
 ---
 
+## 🚀 Live Demo URLs
+- **Platform**: [https://admitguard.site](https://admitguard.site)
+- **API Docs**: [https://admitguard-api.onrender.com/docs](https://admitguard-api.onrender.com/docs)
+- **Analytics JSON**: [https://admitguard-api.onrender.com/api/v1/analytics/summary](https://admitguard-api.onrender.com/api/v1/analytics/summary)
+
+*Note: The backend may take 30-60s to wake up on the first request due to free-tier hibernation.*
+
+---
+
 ## 🎙️ Elevator Pitch
 AdmitGuard is a clinical decision-support and analytics prototype designed to improve hospital operational efficiency. It provides dual-model predictive insights—estimating 30-day readmission risk for diabetic patients and forecasting insurance claim amounts based on patient demographics. Built with a modern glassmorphism interface, it also features a comprehensive hospital benchmarking dashboard using historical CMS HRRP data.
 
@@ -54,24 +63,10 @@ AdmitGuard is a clinical decision-support and analytics prototype designed to im
 
 ---
 
-## ⚙️ Live Demo Commands
-
-### Backend (FastAPI)
-Open a Windows PowerShell terminal in the project root:
-```powershell
-cd backend
-..\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-- **Interactive Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **Analytics Endpoint**: [http://127.0.0.1:8000/api/v1/analytics/summary](http://127.0.0.1:8000/api/v1/analytics/summary)
-
-### Frontend (Next.js)
-Open a new terminal in the project root:
-```powershell
-cd frontend
-pnpm dev
-```
-- **Web App**: [http://localhost:3000](http://localhost:3000)
+### Local Development (Optional)
+If running locally for development:
+- **Backend**: `http://127.0.0.1:8000`
+- **Frontend**: `http://localhost:3000`
 
 ---
 
