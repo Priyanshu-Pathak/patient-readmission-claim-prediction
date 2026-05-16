@@ -3,11 +3,119 @@ import React, { useState } from "react";
 import { api } from "../../lib/api";
 import { ReadmissionRequest, ClaimRequest, ReadmissionResponse, ClaimResponse } from "../../lib/types";
 
+// --- Form Configuration ---
+
+type FieldConfig = {
+  key: string;
+  label: string;
+  helper?: string;
+};
+
+type GroupConfig = {
+  title: string;
+  fields: FieldConfig[];
+};
+
+const reGroups: GroupConfig[] = [
+  {
+    title: "Patient Profile",
+    fields: [
+      { key: "race", label: "Race" },
+      { key: "gender", label: "Gender" },
+      { key: "age", label: "Age Group", helper: "Bracket representation (e.g., [70-80))" },
+    ],
+  },
+  {
+    title: "Encounter Details",
+    fields: [
+      { key: "admission_type_id", label: "Admission Type ID", helper: "Numeric category from the original hospital dataset." },
+      { key: "admission_source_id", label: "Admission Source ID", helper: "Numeric category showing how the patient entered care." },
+      { key: "time_in_hospital", label: "Time in Hospital", helper: "Number of days between admission and discharge (1-14)." },
+    ],
+  },
+  {
+    title: "Prior Utilization",
+    fields: [
+      { key: "num_lab_procedures", label: "Number of Lab Procedures" },
+      { key: "num_procedures", label: "Number of Procedures", helper: "Procedures other than lab tests." },
+      { key: "num_medications", label: "Number of Medications", helper: "Distinct generic drugs administered." },
+      { key: "number_outpatient", label: "Outpatient Visits", helper: "Visits in the prior year." },
+      { key: "number_emergency", label: "Emergency Visits", helper: "Visits in the prior year." },
+      { key: "number_inpatient", label: "Inpatient Visits", helper: "Visits in the prior year." },
+    ],
+  },
+  {
+    title: "Diagnoses & Clinical Complexity",
+    fields: [
+      { key: "diag_1", label: "Primary Diagnosis Code", helper: "ICD-style diagnosis code from the dataset." },
+      { key: "diag_2", label: "Secondary Diagnosis Code", helper: "ICD-style diagnosis code from the dataset." },
+      { key: "diag_3", label: "Tertiary Diagnosis Code", helper: "ICD-style diagnosis code from the dataset." },
+      { key: "number_diagnoses", label: "Number of Diagnoses", helper: "Total diagnoses entered into the system." },
+    ],
+  },
+  {
+    title: "Diabetes Medication Indicators",
+    fields: [
+      { key: "max_glu_serum", label: "Max Glucose Serum" },
+      { key: "A1Cresult", label: "A1C Test Result", helper: "Recent blood sugar control indicator, if available." },
+      { key: "metformin", label: "Metformin Dosage Change" },
+      { key: "repaglinide", label: "Repaglinide Dosage Change" },
+      { key: "nateglinide", label: "Nateglinide Dosage Change" },
+      { key: "chlorpropamide", label: "Chlorpropamide Dosage Change" },
+      { key: "glimepiride", label: "Glimepiride Dosage Change" },
+      { key: "glipizide", label: "Glipizide Dosage Change" },
+      { key: "glyburide", label: "Glyburide Dosage Change" },
+      { key: "pioglitazone", label: "Pioglitazone Dosage Change" },
+      { key: "rosiglitazone", label: "Rosiglitazone Dosage Change" },
+      { key: "acarbose", label: "Acarbose Dosage Change" },
+      { key: "miglitol", label: "Miglitol Dosage Change" },
+      { key: "insulin", label: "Insulin Dosage Change" },
+      { key: "change", label: "Diabetic Med Change", helper: "Was there a change in diabetic medications?" },
+      { key: "diabetesMed", label: "Diabetes Medication Prescribed", helper: "Whether any diabetes medication was prescribed." },
+    ],
+  },
+];
+
+const clGroups: GroupConfig[] = [
+  {
+    title: "Patient Profile",
+    fields: [
+      { key: "age", label: "Age", helper: "Age in years." },
+      { key: "sex", label: "Sex", helper: "Biological sex (male/female)." },
+      { key: "weight", label: "Weight", helper: "Weight in kg." },
+      { key: "bmi", label: "Body Mass Index (BMI)" },
+    ],
+  },
+  {
+    title: "Lifestyle & Risk Factors",
+    fields: [
+      { key: "smoker", label: "Smoker", helper: "Status (1 = smoker, 0 = non-smoker)." },
+      { key: "hereditary_diseases", label: "Hereditary Disease History", helper: "Known inherited or family-linked condition category." },
+      { key: "no_of_dependents", label: "Number of Dependents" },
+    ],
+  },
+  {
+    title: "Medical History",
+    fields: [
+      { key: "bloodpressure", label: "Blood Pressure" },
+      { key: "diabetes", label: "Diabetes", helper: "1 = has diabetes, 0 = does not." },
+      { key: "regular_ex", label: "Regular Exercise", helper: "Lifestyle indicator from the claims dataset (1 = yes, 0 = no)." },
+    ],
+  },
+  {
+    title: "Location & Claim Context",
+    fields: [
+      { key: "city", label: "City" },
+      { key: "job_title", label: "Job Title" },
+    ],
+  },
+];
+
 export default function PredictPage() {
   const [tab, setTab] = useState<"re" | "cl">("re");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [reForm, setReForm] = useState<ReadmissionRequest>({
     race: "Caucasian", gender: "Female", age: "[70-80)",
     admission_type_id: "1", admission_source_id: "7",
@@ -62,66 +170,152 @@ export default function PredictPage() {
     }
   };
 
+  // Helper component to render form fields within groups
+  const renderField = (formState: any, handleChange: any, field: FieldConfig) => {
+    const val = formState[field.key];
+    const isNum = typeof val === "number";
+
+    return (
+      <div key={field.key} className="mb-4">
+        <label className="block text-slate-300 font-medium mb-1">
+          {field.label}
+        </label>
+        <input
+          type={isNum ? "number" : "text"}
+          name={field.key}
+          value={val !== null && val !== undefined ? val : ""}
+          onChange={handleChange}
+          className="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-full text-white focus:outline-none focus:border-blue-500"
+        />
+        {field.helper && (
+          <p className="text-xs text-slate-500 mt-1">{field.helper}</p>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="p-8 max-w-4xl mx-auto text-white bg-slate-900 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">AdmitGuard Predictions</h1>
-      
+    <div className="p-8 max-w-6xl mx-auto text-white bg-slate-900 min-h-screen font-sans">
+      <h1 className="text-3xl font-bold mb-2">AdmitGuard Predictions</h1>
+      <p className="text-slate-400 mb-8">Clinical decision-support prototype.</p>
+
       <div className="flex gap-4 mb-8">
-        <button className={`px-4 py-2 rounded ${tab==="re" ? "bg-blue-600":"bg-slate-700"}`} onClick={()=>setTab("re")}>Readmission</button>
-        <button className={`px-4 py-2 rounded ${tab==="cl" ? "bg-blue-600":"bg-slate-700"}`} onClick={()=>setTab("cl")}>Claim</button>
+        <button
+          className={`px-6 py-2 rounded-md font-medium transition-colors ${
+            tab === "re" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+          }`}
+          onClick={() => setTab("re")}
+        >
+          Readmission Risk
+        </button>
+        <button
+          className={`px-6 py-2 rounded-md font-medium transition-colors ${
+            tab === "cl" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+          }`}
+          onClick={() => setTab("cl")}
+        >
+          Claim Estimate
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Form Column */}
+        <div className="lg:col-span-2">
           {tab === "re" ? (
-            <div className="space-y-2 text-sm">
-              {Object.keys(reForm).map(k => (
-                <div key={k}>
-                  <label className="block text-slate-400">{k}</label>
-                  {typeof (reForm as any)[k] === "number" ? (
-                    <input type="number" name={k} value={(reForm as any)[k]} onChange={handleRe} className="bg-slate-800 p-1 w-full" />
-                  ) : (
-                    <input type="text" name={k} value={(reForm as any)[k] || ""} onChange={handleRe} className="bg-slate-800 p-1 w-full" />
-                  )}
+            <div className="space-y-8">
+              {reGroups.map(group => (
+                <div key={group.title} className="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                  <h3 className="text-lg font-semibold text-blue-400 mb-4 pb-2 border-b border-slate-700">
+                    {group.title}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                    {group.fields.map(field => renderField(reForm, handleRe, field))}
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="space-y-2 text-sm">
-              {Object.keys(clForm).map(k => (
-                <div key={k}>
-                  <label className="block text-slate-400">{k}</label>
-                  {typeof (clForm as any)[k] === "number" ? (
-                    <input type="number" name={k} value={(clForm as any)[k]} onChange={handleCl} className="bg-slate-800 p-1 w-full" />
-                  ) : (
-                    <input type="text" name={k} value={(clForm as any)[k] || ""} onChange={handleCl} className="bg-slate-800 p-1 w-full" />
-                  )}
+            <div className="space-y-8">
+              {clGroups.map(group => (
+                <div key={group.title} className="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50">
+                  <h3 className="text-lg font-semibold text-teal-400 mb-4 pb-2 border-b border-slate-700">
+                    {group.title}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                    {group.fields.map(field => renderField(clForm, handleCl, field))}
+                  </div>
                 </div>
               ))}
             </div>
           )}
-          <button className="mt-4 bg-green-600 px-4 py-2 w-full" onClick={submit} disabled={loading}>{loading ? "..." : "Predict"}</button>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
+
+          <div className="mt-8">
+            <button
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-blue-900/20 disabled:opacity-50"
+              onClick={submit}
+              disabled={loading}
+            >
+              {loading ? "Analyzing..." : (tab === "re" ? "Analyze Readmission Risk" : "Estimate Claim Amount")}
+            </button>
+            {error && <p className="text-red-400 mt-4 p-3 bg-red-900/20 rounded border border-red-900/50">{error}</p>}
+          </div>
         </div>
 
-        <div className="bg-slate-800 p-4 rounded">
-          <h2 className="font-bold mb-2">Result</h2>
-          {tab === "re" ? (
-            reRes ? (
-              <div>
-                <p>Risk: {reRes.risk_label}</p>
-                <p>Prob: {(reRes.risk_probability || 0 * 100).toFixed(1)}%</p>
-                <p className="text-xs mt-4 opacity-50">{reRes.disclaimer}</p>
-              </div>
-            ) : "No result"
-          ) : (
-            clRes ? (
-              <div>
-                <p>Claim: ${clRes.predicted_claim_amount.toFixed(2)}</p>
-                <p className="text-xs mt-4 opacity-50">{clRes.disclaimer}</p>
-              </div>
-            ) : "No result"
-          )}
+        {/* Results Column */}
+        <div className="lg:col-span-1">
+          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 sticky top-8">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              Result
+            </h2>
+            {tab === "re" ? (
+              reRes ? (
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
+                    <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">Risk Level</p>
+                    <p className={`text-2xl font-bold ${
+                      reRes.risk_label === 'High' ? 'text-red-400' :
+                      reRes.risk_label === 'Medium' ? 'text-yellow-400' : 'text-green-400'
+                    }`}>
+                      {reRes.risk_label}
+                    </p>
+                  </div>
+                  <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
+                    <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">Probability</p>
+                    <p className="text-3xl font-light text-blue-400">
+                      {reRes.risk_probability !== null ? `${(reRes.risk_probability * 100).toFixed(1)}%` : "N/A"}
+                    </p>
+                  </div>
+                  <div className="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-700">
+                    <p className="font-semibold mb-1">Note:</p>
+                    <p>{reRes.disclaimer}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-slate-500 text-center py-12 border-2 border-dashed border-slate-700 rounded-lg">
+                  Submit the form to view readmission risk analysis.
+                </div>
+              )
+            ) : (
+              clRes ? (
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
+                    <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">Estimated Claim</p>
+                    <p className="text-3xl font-bold text-teal-400">
+                      ${clRes.predicted_claim_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </p>
+                  </div>
+                  <div className="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-700">
+                    <p className="font-semibold mb-1">Note:</p>
+                    <p>{clRes.disclaimer}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-slate-500 text-center py-12 border-2 border-dashed border-slate-700 rounded-lg">
+                  Submit the form to view estimated claim amount.
+                </div>
+              )
+            )}
+          </div>
         </div>
       </div>
     </div>
