@@ -105,8 +105,9 @@ Because artifacts are not committed, you must build the models locally.
 ---
 
 ## 📸 Screenshots
-*(Manual screenshots pending)*
 
 ![Landing Page](docs/screenshots/landing-page.png)
+![About Page](docs/screenshots/about-page.png)
+![How It Works](docs/screenshots/how-it-works-page.png)
 ![Prediction Dashboard](docs/screenshots/predict-dashboard.png)
 ![Prediction Results](docs/screenshots/prediction-results.png)

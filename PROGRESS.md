@@ -1413,9 +1413,30 @@ The `/predict` page was updated to support the new separate task-specific datase
 
 ---
 
+## Update — Phase 11A.5 (Demo Documentation and Screenshot Update)
+
+### Completed Phase
+Phase 11A.5 — Demo Documentation and Screenshot Update
+
+### Context
+Finalized documentation and captured fresh screenshots of the polished UI to ensure the repository is demo-ready and accurately reflects the task-specific model rebuilds.
+
+### What Was Implemented
+- **Manual Demo Verification**: Successfully verified both Readmission Risk and Claim Estimate forms.
+- **Form Verification**: Confirmed that validation logic correctly blocks empty submissions and processing works for valid data.
+- **Responsive Layout**: Verified that the dashboard collapses gracefully on mobile widths and maintains usability.
+- **Screenshots**: Captured 5 fresh screenshots of all key application pages (Landing, About, How It Works, Predict Dashboard, and Results).
+- **Documentation Alignment**: Updated `README.md` to remove pending notes and correctly reference all new screenshots.
+
+### Validation Result
+- **Frontend Build**: `pnpm build` passed successfully.
+- **Backend/ML**: `compileall` passed with no syntax errors.
+- **Git Hygiene**: Verified that raw data, virtual environments, and build artifacts remain Git-ignored.
+
+---
+
 ## 11. Current Next Step
 
-1. Final visual polish pass for `/predict` page
-2. Optional UI screenshots/demo verification
-3. Dashboard/hospital analytics page review
-4. Final README polish for portfolio/demo use
+1. Dashboard/hospital analytics page review (Phase 12)
+2. SHAP/Explainability integration
+3. Final project hand-off documentation
