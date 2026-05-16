@@ -281,6 +281,7 @@ export default function PredictPage() {
   const [tab, setTab] = useState<"re" | "cl">("re");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [reForm, setReForm] = useState<ReadmissionRequest>({
     race: "Caucasian", gender: "Female", age: "[70-80)",
@@ -308,41 +309,91 @@ export default function PredictPage() {
 
   const handleRe = (e: any) => {
     const { name, value, type } = e.target;
-    // For selects, type is 'select-one', so we also need to check if the state currently holds a number
     const isNumberField = typeof (reForm as any)[name] === "number";
     setReForm(p => ({ ...p, [name]: (type === "number" || isNumberField) ? Number(value) : value }));
+    setFieldErrors(prev => ({ ...prev, [name]: "" }));
+    setError(null);
   };
 
   const handleCl = (e: any) => {
     const { name, value, type } = e.target;
     const isNumberField = typeof (clForm as any)[name] === "number";
     setClForm(p => ({ ...p, [name]: (type === "number" || isNumberField) ? Number(value) : value }));
+    setFieldErrors(prev => ({ ...prev, [name]: "" }));
+    setError(null);
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (tab === "re") {
+      Object.keys(reForm).forEach(k => {
+        const val = (reForm as any)[k];
+        if (val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val))) {
+          newErrors[k] = "This field is required.";
+        }
+      });
+      if (reForm.time_in_hospital < 1 || reForm.time_in_hospital > 14) newErrors.time_in_hospital = "Must be between 1 and 14.";
+      if (reForm.num_lab_procedures < 0) newErrors.num_lab_procedures = "Cannot be negative.";
+      if (reForm.num_procedures < 0) newErrors.num_procedures = "Cannot be negative.";
+      if (reForm.num_medications < 0) newErrors.num_medications = "Cannot be negative.";
+      if (reForm.number_outpatient < 0) newErrors.number_outpatient = "Cannot be negative.";
+      if (reForm.number_emergency < 0) newErrors.number_emergency = "Cannot be negative.";
+      if (reForm.number_inpatient < 0) newErrors.number_inpatient = "Cannot be negative.";
+      if (reForm.number_diagnoses < 1) newErrors.number_diagnoses = "Must be at least 1.";
+      
+      if (!reForm.diag_1?.trim()) newErrors.diag_1 = "Primary diagnosis cannot be blank.";
+      if (!reForm.diag_2?.trim()) newErrors.diag_2 = "Secondary diagnosis cannot be blank.";
+      if (!reForm.diag_3?.trim()) newErrors.diag_3 = "Tertiary diagnosis cannot be blank.";
+    } else {
+      Object.keys(clForm).forEach(k => {
+        const val = (clForm as any)[k];
+        if (val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val))) {
+          newErrors[k] = "This field is required.";
+        }
+      });
+      if (clForm.age < 0 || clForm.age > 120) newErrors.age = "Must be between 0 and 120.";
+      if (clForm.weight <= 0) newErrors.weight = "Must be greater than 0.";
+      if (clForm.bmi <= 0) newErrors.bmi = "Must be greater than 0.";
+      if (clForm.no_of_dependents < 0) newErrors.no_of_dependents = "Cannot be negative.";
+      if (clForm.bloodpressure <= 0) newErrors.bloodpressure = "Must be greater than 0.";
+
+      if (!clForm.city?.trim()) newErrors.city = "City cannot be blank.";
+      if (!clForm.job_title?.trim()) newErrors.job_title = "Job title cannot be blank.";
+    }
+
+    setFieldErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setError("Please fix the highlighted field errors before submitting.");
+      return false;
+    }
+    return true;
   };
 
   const submit = async () => {
+    if (!validateForm()) return;
+    
     setError(null);
     setLoading(true);
     try {
       if (tab === "re") {
-        if (reForm.time_in_hospital < 1) throw new Error("Hospital days >= 1");
         const r = await api.predictReadmission(reForm);
         setReRes(r.data || null);
       } else {
-        if (clForm.age < 0) throw new Error("Age >= 0");
         const r = await api.predictClaim(clForm);
         setClRes(r.data || null);
       }
     } catch (e: any) {
-      setError(e.message || "Failed");
+      setError(e.message || "Failed to submit prediction. Please check your connection or backend status.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Helper component to render form fields within groups
   const renderField = (formState: any, handleChange: any, field: FieldConfig) => {
     const val = formState[field.key];
     const isNum = typeof val === "number";
+    const fieldErr = fieldErrors[field.key];
 
     return (
       <div key={field.key} className="mb-4">
@@ -354,7 +405,7 @@ export default function PredictPage() {
             name={field.key}
             value={val !== null && val !== undefined ? val : ""}
             onChange={handleChange}
-            className="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-full text-white focus:outline-none focus:border-blue-500"
+            className={`bg-slate-800 border rounded px-3 py-2 w-full text-white focus:outline-none ${fieldErr ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-blue-500'}`}
           >
             {field.options.map(opt => (
               <option key={opt.value} value={opt.value}>
@@ -368,12 +419,14 @@ export default function PredictPage() {
             name={field.key}
             value={val !== null && val !== undefined ? val : ""}
             onChange={handleChange}
-            className="bg-slate-800 border border-slate-700 rounded px-3 py-2 w-full text-white focus:outline-none focus:border-blue-500"
+            className={`bg-slate-800 border rounded px-3 py-2 w-full text-white focus:outline-none ${fieldErr ? 'border-red-500 focus:border-red-500' : 'border-slate-700 focus:border-blue-500'}`}
           />
         )}
-        {field.helper && (
+        {fieldErr ? (
+          <p className="text-xs text-red-400 mt-1">{fieldErr}</p>
+        ) : field.helper ? (
           <p className="text-xs text-slate-500 mt-1">{field.helper}</p>
-        )}
+        ) : null}
       </div>
     );
   };
@@ -388,7 +441,11 @@ export default function PredictPage() {
           className={`px-6 py-2 rounded-md font-medium transition-colors ${
             tab === "re" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"
           }`}
-          onClick={() => setTab("re")}
+          onClick={() => {
+            setTab("re");
+            setFieldErrors({});
+            setError(null);
+          }}
         >
           Readmission Risk
         </button>
@@ -396,7 +453,11 @@ export default function PredictPage() {
           className={`px-6 py-2 rounded-md font-medium transition-colors ${
             tab === "cl" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"
           }`}
-          onClick={() => setTab("cl")}
+          onClick={() => {
+            setTab("cl");
+            setFieldErrors({});
+            setError(null);
+          }}
         >
           Claim Estimate
         </button>
@@ -434,6 +495,7 @@ export default function PredictPage() {
           )}
 
           <div className="mt-8">
+            {error && <p className="text-red-400 mb-4 p-3 bg-red-900/20 rounded border border-red-900/50">{error}</p>}
             <button
               className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-blue-900/20 disabled:opacity-50"
               onClick={submit}
@@ -441,7 +503,6 @@ export default function PredictPage() {
             >
               {loading ? "Analyzing..." : (tab === "re" ? "Analyze Readmission Risk" : "Estimate Claim Amount")}
             </button>
-            {error && <p className="text-red-400 mt-4 p-3 bg-red-900/20 rounded border border-red-900/50">{error}</p>}
           </div>
         </div>
 
