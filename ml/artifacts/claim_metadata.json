@@ -1,0 +1,26 @@
+{
+    "target_column": "claim",
+    "model_type": "regression",
+    "algorithm": "RandomForestRegressor(n_estimators=200, min_samples_leaf=2)",
+    "dataset": "healthinsurance_claims.csv",
+    "rows_after_dedup": 13904,
+    "target_stats": {
+        "min": 1121.9,
+        "median": 9567.0,
+        "mean": 13431.813744246261,
+        "max": 63770.4,
+        "std": 12142.099412767748
+    },
+    "evaluation_metrics": {
+        "mae": 558.8855865955888,
+        "rmse": 2047.7734472396935,
+        "r2": 0.9719779905796133,
+        "mape": 0.06310397816083012,
+        "mape_pct": 6.3104
+    },
+    "limitations": [
+        "Dataset is synthetic/educational; not from a real insurer.",
+        "city column has 91 unique values \u2014 unseen cities fall back to zeros via handle_unknown='ignore'.",
+        "Prediction is an estimate for decision-support only, not financial advice."
+    ]
+}

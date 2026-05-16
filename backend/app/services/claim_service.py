@@ -1,4 +1,3 @@
-from typing import Optional, Dict, Any
 from datetime import datetime, timezone
 import logging
 from pathlib import Path
@@ -10,50 +9,66 @@ from app.schemas.claim import ClaimRequest, ClaimPredictionResponse
 
 logger = logging.getLogger(__name__)
 
+
 class ClaimService:
     def __init__(self):
         path = Path(settings.CLAIM_MODEL_PATH)
         self.model_path = path if path.is_absolute() else PROJECT_ROOT / path
         self.model_loaded = False
         self.model = None
-
         self._initialize_model()
 
     def _initialize_model(self):
+        """
+        Lazily load the model pipeline at startup.
+        Returns clean 503 if artifacts are missing rather than crashing.
+        """
         try:
-            if Path(self.model_path).exists():
+            if self.model_path.exists():
                 self.model = joblib.load(self.model_path)
                 self.model_loaded = True
-                logger.info("Successfully loaded claim model.")
+                logger.info("Claim model loaded from %s", self.model_path)
             else:
-                logger.info(f"Model artifacts not found at {self.model_path}. Service will run in 'not_configured' mode.")
-        except Exception as e:
-            logger.error(f"Failed to load claim model: {e}")
+                logger.info(
+                    "Claim model artifact not found at %s. "
+                    "Service running in not_configured mode.",
+                    self.model_path,
+                )
+        except Exception as exc:
+            logger.error("Failed to load claim model: %s", exc)
 
     def predict(self, request: ClaimRequest) -> ClaimPredictionResponse:
+        """Run claim amount regression prediction."""
         if not self.model_loaded:
             return ClaimPredictionResponse(
                 predicted_claim_amount=0.0,
                 model_status="not_configured",
-                confidence_note="Claim model artifact is missing. Prediction cannot be fulfilled.",
-                timestamp=datetime.now(timezone.utc).isoformat()
+                confidence_note="Claim model artifact is missing. Train the model first.",
+                timestamp=datetime.now(timezone.utc).isoformat(),
             )
 
         try:
-            req_dict = request.model_dump(by_alias=True)
+            req_dict = request.model_dump()
             df = pd.DataFrame([req_dict])
-            
-            # Predict
-            predicted_claim_amount = float(self.model.predict(df)[0])
-            
+
+            predicted_amount = float(self.model.predict(df)[0])
+            # Clamp to non-negative (regression can occasionally produce tiny negatives)
+            predicted_amount = max(0.0, predicted_amount)
+
             return ClaimPredictionResponse(
-                predicted_claim_amount=predicted_claim_amount,
+                predicted_claim_amount=round(predicted_amount, 2),
                 model_status="active",
-                confidence_note="Regression prediction successful.",
-                timestamp=datetime.now(timezone.utc).isoformat()
+                confidence_note=(
+                    "Estimate from RandomForestRegressor trained on health insurance data. "
+                    "Unseen cities/job titles fall back to ensemble average."
+                ),
+                timestamp=datetime.now(timezone.utc).isoformat(),
             )
-        except Exception as e:
-            logger.error(f"Claim prediction processing error: {e}")
+
+        except Exception as exc:
+            logger.error("Claim prediction processing error: %s", exc)
             raise
 
+
+# Singleton
 claim_service = ClaimService()

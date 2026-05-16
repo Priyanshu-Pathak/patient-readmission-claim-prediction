@@ -1,0 +1,49 @@
+{
+    "dataset": "data/raw/claims/healthinsurance_claims.csv",
+    "rows": 15000,
+    "columns": 13,
+    "column_names": [
+        "age",
+        "sex",
+        "weight",
+        "bmi",
+        "hereditary_diseases",
+        "no_of_dependents",
+        "smoker",
+        "city",
+        "bloodpressure",
+        "diabetes",
+        "regular_ex",
+        "job_title",
+        "claim"
+    ],
+    "duplicate_rows": 1096,
+    "missing_values": {
+        "age": 396,
+        "bmi": 956
+    },
+    "numeric_columns": [
+        "age",
+        "weight",
+        "bmi",
+        "no_of_dependents",
+        "smoker",
+        "bloodpressure",
+        "diabetes",
+        "regular_ex",
+        "claim"
+    ],
+    "categorical_columns": [
+        "sex",
+        "hereditary_diseases",
+        "city",
+        "job_title"
+    ],
+    "target_stats": {
+        "min": 1121.9,
+        "median": 9545.650000000001,
+        "mean": 13401.43762,
+        "max": 63770.4,
+        "std": 12148.239618831356
+    }
+}

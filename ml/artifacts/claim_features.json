@@ -1,0 +1,47 @@
+{
+    "features": [
+        "age",
+        "weight",
+        "bmi",
+        "no_of_dependents",
+        "bloodpressure",
+        "smoker",
+        "diabetes",
+        "regular_ex",
+        "sex",
+        "hereditary_diseases",
+        "city",
+        "job_title"
+    ],
+    "numeric_features": [
+        "age",
+        "weight",
+        "bmi",
+        "no_of_dependents",
+        "bloodpressure",
+        "smoker",
+        "diabetes",
+        "regular_ex"
+    ],
+    "categorical_features": [
+        "sex",
+        "hereditary_diseases",
+        "city",
+        "job_title"
+    ],
+    "binary_numeric_features": [
+        "smoker",
+        "diabetes",
+        "regular_ex"
+    ],
+    "dropped_columns": [
+        "claim"
+    ],
+    "notes": {
+        "smoker": "Binary int: 1=smoker, 0=non-smoker",
+        "diabetes": "Binary int: 1=has diabetes, 0=does not",
+        "regular_ex": "Binary int: 1=exercises regularly, 0=does not",
+        "city": "91 unique cities -- high-cardinality; OneHotEncoder with handle_unknown=ignore",
+        "job_title": "35 unique job titles; OneHotEncoder with handle_unknown=ignore"
+    }
+}

@@ -1,42 +1,56 @@
+from typing import Optional
 from pydantic import BaseModel, Field
+
 
 class ClaimRequest(BaseModel):
     """
-    Schema for claim amount prediction aligned with the trained model features.
+    Schema for claim amount prediction using the health insurance claims dataset.
+    12 features from healthinsurance_claims.csv — all pre-claim patient demographics
+    and health indicators.
     """
-    age: str = Field(..., description="Age group, e.g., '[70-80)'")
-    gender: str = Field(..., description="Gender: 'Male', 'Female', etc.")
-    weight: float = Field(..., description="Weight in lbs/kg")
+    # Demographics
+    age: float = Field(..., description="Age in years (18-64)")
+    sex: str = Field(..., description="Biological sex: 'male' or 'female'")
+    weight: float = Field(..., description="Weight in kg (34-95)")
     bmi: float = Field(..., description="Body Mass Index")
-    no_of_dependents: float = Field(..., description="Number of dependents")
-    heart_rate: float = Field(..., alias="heart rate", description="Heart rate in BPM")
-    time_in_hospital: float = Field(..., description="Days in hospital")
-    payer_code: str = Field(..., description="Payer code category")
-    num_lab_procedures: float = Field(..., description="Number of lab procedures performed")
-    num_procedures: float = Field(..., description="Number of procedures")
-    num_medications: float = Field(..., description="Number of medications")
-    number_outpatient: float = Field(..., description="Number of outpatient visits")
-    number_emergency: float = Field(..., description="Number of emergency visits")
-    number_inpatient: float = Field(..., description="Number of inpatient visits")
-    number_diagnoses: float = Field(..., description="Number of diagnoses")
-    insulin: str = Field(..., description="Insulin prescription status: 'Up', 'Down', 'Steady', 'No'")
-    change: str = Field(..., description="Medication change status: 'Ch', 'No'")
-    diabetesMed: str = Field(..., description="Indicates if any diabetic medication was prescribed: 'Yes' or 'No'")
+    no_of_dependents: int = Field(..., description="Number of dependents (0-5)")
 
-    model_config = {
-        "populate_by_name": True
-    }
+    # Health indicators (binary int: 1=yes, 0=no)
+    smoker: int = Field(..., description="Smoker status: 1=smoker, 0=non-smoker")
+    diabetes: int = Field(..., description="Diabetes: 1=has diabetes, 0=does not")
+    regular_ex: int = Field(..., description="Regular exercise: 1=yes, 0=no")
+
+    # Clinical measurement
+    bloodpressure: int = Field(..., description="Blood pressure reading (integer)")
+
+    # Categorical context
+    hereditary_diseases: str = Field(
+        ...,
+        description="Hereditary disease: one of 'NoDisease', 'Epilepsy', 'EyeDisease', "
+                    "'Alzheimer', 'Arthritis', 'HeartDisease', 'Diabetes', 'Cancer', 'High BP', 'Obesity'",
+    )
+    city: str = Field(..., description="City of residence, e.g., 'NewYork', 'Boston'")
+    job_title: str = Field(
+        ...,
+        description="Occupation, e.g., 'Engineer', 'Doctor', 'Student'",
+    )
+
+    model_config = {"populate_by_name": True}
+
 
 class ClaimPredictionResponse(BaseModel):
     """
-    Structured response for claim prediction.
+    Structured response for insurance claim amount estimation.
     """
-    predicted_claim_amount: float = Field(..., description="Predicted total claim amount")
-    currency: str = Field("USD", description="Currency unit of the claim")
-    model_status: str = Field(..., description="Status of the ML model, e.g., 'active', 'not_configured'")
-    confidence_note: str = Field(..., description="Note on model confidence or validity")
-    timestamp: str = Field(..., description="Timestamp of the prediction")
+    predicted_claim_amount: float = Field(
+        ..., description="Predicted total insurance claim amount"
+    )
+    currency: str = Field("USD", description="Currency unit of the predicted claim")
+    model_status: str = Field(..., description="Status: 'active' or 'not_configured'")
+    confidence_note: str = Field(..., description="Note on model confidence and limitations")
+    timestamp: str = Field(..., description="UTC timestamp of prediction")
     disclaimer: str = Field(
-        "This is an educational decision-support output and not financial advice.",
-        description="Mandatory disclaimer"
+        "This is an educational decision-support prototype output and not financial or medical advice. "
+        "Do not use for actual insurance underwriting or pricing decisions.",
+        description="Mandatory disclaimer",
     )

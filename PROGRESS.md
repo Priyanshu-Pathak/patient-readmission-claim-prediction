@@ -1338,8 +1338,62 @@ Phase 11A.2 — Readmission Model Rebuild
 ### Next Step
 Phase 11A.3 — Claim Model Rebuild (using `healthinsurance_claims.csv`)
 
+## Update — Phase 11A.3 (Claim Model Rebuild)
+
+### Completed Phase
+Phase 11A.3 — Claim Model Rebuild
+
+### Dataset Used
+- `data/raw/claims/healthinsurance_claims.csv`
+- Raw shape: 15,000 rows x 13 columns
+- After deduplication: 13,904 rows (1,096 duplicate rows removed)
+
+### Target Variable
+- `claim` — continuous float (USD) regression target
+- Min: $1,121.90 | Median: $9,567 | Mean: $13,432 | Max: $63,770
+
+### Feature Selection (12 features)
+- Numeric (8): age, weight, bmi, no_of_dependents, bloodpressure, smoker, diabetes, regular_ex
+- Categorical (4): sex, hereditary_diseases, city, job_title
+- No leakage: all features are pre-claim patient characteristics
+- Only `claim` dropped (it is the target)
+
+### Data Issues Handled
+- `age`: 396 missing values — imputed via median
+- `bmi`: 956 missing values — imputed via median
+- `city`: 91 unique values — handled via OneHotEncoder(handle_unknown='ignore')
+
+### Model
+- Algorithm: RandomForestRegressor(n_estimators=200, min_samples_leaf=2)
+- Train/Test: 80/20 split (11,123 / 2,781 rows)
+
+### Honest Metrics
+- MAE: $558.89
+- RMSE: $2,047.77
+- R2: 0.972
+- MAPE: 6.31%
+
+### Artifacts Generated
+- `ml/artifacts/claim_model.joblib` (Git-ignored local binary)
+- `ml/artifacts/claim_features.json` (tracked)
+- `ml/artifacts/claim_metadata.json` (tracked)
+- `ml/reports/claim_metrics.json` (tracked)
+- `ml/reports/claim_data_profile.json` (tracked)
+
+### Backend Changes
+- Replaced `backend/app/schemas/claim.py` — new 12-field schema aligned with healthinsurance_claims.csv (removed all old fused-dataset fields)
+- Updated `backend/app/services/claim_service.py` — cleaner error handling, non-negative clamping, improved logging
+
+### Runtime Test Result
+- `POST /api/v1/claim/predict` — HTTP 200, model_status: active, predicted_claim_amount: $7,235.18 ✓
+- Invalid claim payload — HTTP 422 ✓
+- `POST /api/v1/readmission/predict` — HTTP 200, still active ✓
+
+### Next Step
+Phase 11A.4 — Frontend UI update to support the new dual-schema predict interface
+
 ---
 
 ## 11. Current Next Step
 
-Phase 11A.3 — Claim model rebuild using `data/raw/claims/healthinsurance_claims.csv`, aligned with the new task-specific strategy.
+Phase 11A.4 — Frontend update to reflect the two separate model schemas (readmission uses diabetic_data features; claim uses insurance features). Update `/predict` page accordingly.
