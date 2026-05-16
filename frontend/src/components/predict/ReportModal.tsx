@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import type { ReadmissionRequest, ReadmissionResponse, ClaimRequest, ClaimResponse } from "@/lib/types";
+import { PredictionReportPDF } from "./PredictionReportPDF";
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -12,6 +14,12 @@ interface ReportModalProps {
 }
 
 export function ReportModal({ isOpen, onClose, type, form, result }: ReportModalProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -44,10 +52,20 @@ export function ReportModal({ isOpen, onClose, type, form, result }: ReportModal
           <div className="flex gap-2">
             <button
               onClick={handlePrint}
-              className="px-4 py-2 text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/30 rounded hover:bg-primary/20 transition-colors"
+              className="px-4 py-2 text-xs font-bold uppercase tracking-widest bg-muted/20 text-foreground border border-border rounded hover:bg-muted/40 transition-colors"
             >
-              Print / Save PDF
+              Preview Print
             </button>
+            {mounted && (
+              <PDFDownloadLink
+                document={<PredictionReportPDF type={type} form={form as any} result={result as any} />}
+                fileName={`AdmitGuard_${isRe ? "Readmission" : "Claim"}_Report_${new Date().getTime()}.pdf`}
+                className="px-4 py-2 text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/30 rounded hover:bg-primary/20 transition-colors flex items-center justify-center"
+              >
+                {/* @ts-ignore */}
+                {({ loading }) => (loading ? "Generating PDF..." : "Download PDF")}
+              </PDFDownloadLink>
+            )}
           </div>
           <button
             onClick={onClose}
