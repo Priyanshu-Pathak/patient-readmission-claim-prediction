@@ -42,12 +42,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col bg-background text-foreground font-sans">
       <header className="sticky top-0 z-50 w-full bg-background border-b border-border/40">
         <Container className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="h-6 w-6 rounded bg-primary/20 flex items-center justify-center shrink-0">
               <span className="text-primary font-bold text-sm leading-none">+</span>
             </div>
             <span className="font-semibold text-lg tracking-tight">AdmitGuard Intelligence</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav ref={navRef} className="hidden md:flex items-center gap-2 relative h-full">
