@@ -4,6 +4,7 @@ import {
   ReadmissionResponse,
   ClaimResponse,
   AnalyticsSummary,
+  AnalyticsExploreResponse,
   ApiResponse,
 } from "./types";
 
@@ -66,4 +67,17 @@ export const api = {
       `${API_BASE}/analytics/summary`,
       { method: "GET" }
     ),
+
+  /** Interactive HRRP hospital benchmarking explore endpoint */
+  getAnalyticsExplore: (params?: { state?: string; condition?: string; top_n?: number }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.state) searchParams.append("state", params.state);
+    if (params?.condition) searchParams.append("condition", params.condition);
+    if (params?.top_n) searchParams.append("top_n", params.top_n.toString());
+    
+    const queryString = searchParams.toString();
+    const url = `${API_BASE}/analytics/explore${queryString ? `?${queryString}` : ""}`;
+    
+    return fetchWithHandling<AnalyticsExploreResponse>(url, { method: "GET" });
+  },
 };

@@ -144,3 +144,19 @@ export interface AnalyticsSummary {
   coverage_note?: string;
   disclaimer?: string;
 }
+
+export interface FilterOptions {
+  states: string[];
+  conditions: string[];
+}
+
+export interface HistogramBin {
+  bin_start: number;
+  bin_end: number;
+  count: number;
+}
+
+export interface AnalyticsExploreResponse extends AnalyticsSummary {
+  filter_options: FilterOptions;
+  err_distribution: HistogramBin[];
+}

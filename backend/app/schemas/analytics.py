@@ -78,3 +78,26 @@ class AnalyticsSummary(BaseModel):
         "AdmitGuard readmission classifier. Not for clinical use.",
         description="Mandatory data framing disclaimer"
     )
+
+class FilterOptions(BaseModel):
+    """Available options for filtering the dataset."""
+    states: List[str] = Field(..., description="List of unique state abbreviations available in the dataset")
+    conditions: List[str] = Field(..., description="List of unique condition codes available in the dataset")
+
+class HistogramBin(BaseModel):
+    """A bin for the ERR histogram."""
+    bin_start: float = Field(..., description="Start of the bin range (inclusive)")
+    bin_end: float = Field(..., description="End of the bin range (exclusive)")
+    count: int = Field(..., description="Number of records falling into this bin")
+
+class AnalyticsExploreResponse(AnalyticsSummary):
+    """
+    Extended payload for the interactive dashboard, containing both the 
+    standard summary (filtered) and data structures for dynamic charting.
+    """
+    filter_options: FilterOptions = Field(
+        ..., description="Options for available filters based on the original full dataset."
+    )
+    err_distribution: List[HistogramBin] = Field(
+        ..., description="Histogram bins for the Excess Readmission Ratio."
+    )
