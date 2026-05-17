@@ -139,6 +139,51 @@ interface PredictionReportPDFProps {
   result: ReadmissionResponse | ClaimResponse;
 }
 
+function BaselineBulletChartPDF({
+  label,
+  value,
+  stats,
+  isCurrency = false
+}: {
+  label: string;
+  value: number;
+  stats?: import("@/lib/types").BaselineStats;
+  isCurrency?: boolean;
+}) {
+  if (!stats || stats.max === stats.min) return null;
+
+  const fmt = (v: number) => isCurrency 
+    ? `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}` 
+    : v.toLocaleString(undefined, { maximumFractionDigits: 1 });
+
+  const toPct = (v: number) => Math.max(0, Math.min(100, ((v - stats.min) / (stats.max - stats.min)) * 100));
+
+  const p25Pct = toPct(stats.p25);
+  const p75Pct = toPct(stats.p75);
+  const medianPct = toPct(stats.median);
+  const valPct = toPct(value);
+
+  return (
+    <View style={{ marginBottom: 10 }}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
+        <Text style={{ fontSize: 9, color: "#6b7280" }}>{label}</Text>
+        <Text style={{ fontSize: 9, fontWeight: "bold", color: "#111827" }}>{fmt(value)}</Text>
+      </View>
+      <View style={{ position: "relative", height: 10, backgroundColor: "#f3f4f6", borderRadius: 2 }}>
+        <View style={{ position: "absolute", left: `${p25Pct}%`, width: `${p75Pct - p25Pct}%`, height: "100%", backgroundColor: "#d1d5db" }} />
+        <View style={{ position: "absolute", left: `${medianPct}%`, width: 1, height: "100%", backgroundColor: "#4b5563" }} />
+        <View style={{ position: "absolute", left: `${valPct}%`, width: 4, height: "100%", backgroundColor: isCurrency ? "#d97706" : "#0d9488" }} />
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 2 }}>
+        <Text style={{ fontSize: 7, color: "#9ca3af" }}>{fmt(stats.min)}</Text>
+        <Text style={{ fontSize: 7, color: "#9ca3af" }}>Med: {fmt(stats.median)}</Text>
+        <Text style={{ fontSize: 7, color: "#9ca3af" }}>{fmt(stats.max)}</Text>
+      </View>
+    </View>
+  );
+}
+
+
 export function PredictionReportPDF({ type, form, result }: PredictionReportPDFProps) {
   const isRe = type === "re";
 
@@ -203,6 +248,24 @@ export function PredictionReportPDF({ type, form, result }: PredictionReportPDFP
             <Text>This score estimates the model's predicted likelihood of readmission derived solely from the submitted clinical profile. It is a prototype output only. It is not medical advice and must not be used as a clinical decision by itself.</Text>
           </View>
         </View>
+
+        {/* Baseline Comparison */}
+        {rRes.baseline_context && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Dataset Baseline Comparison</Text>
+            <View style={styles.resultCard}>
+              <BaselineBulletChartPDF label="Time in Hospital" value={rForm.time_in_hospital} stats={rRes.baseline_context.time_in_hospital} />
+              <BaselineBulletChartPDF label="Lab Procedures" value={rForm.num_lab_procedures} stats={rRes.baseline_context.num_lab_procedures} />
+              <BaselineBulletChartPDF label="Other Procedures" value={rForm.num_procedures} stats={rRes.baseline_context.num_procedures} />
+              <BaselineBulletChartPDF label="Medications" value={rForm.num_medications} stats={rRes.baseline_context.num_medications} />
+              <BaselineBulletChartPDF label="Outpatient Visits" value={rForm.number_outpatient} stats={rRes.baseline_context.number_outpatient} />
+              <BaselineBulletChartPDF label="Emergency Visits" value={rForm.number_emergency} stats={rRes.baseline_context.number_emergency} />
+              <BaselineBulletChartPDF label="Inpatient Visits" value={rForm.number_inpatient} stats={rRes.baseline_context.number_inpatient} />
+              <BaselineBulletChartPDF label="Diagnoses" value={rForm.number_diagnoses} stats={rRes.baseline_context.number_diagnoses} />
+              <Text style={{ fontSize: 8, color: "#6b7280", marginTop: 5 }}>Descriptive reference only. The shaded bar is the dataset IQR (25th-75th percentile). This does not explain causality or feature importance.</Text>
+            </View>
+          </View>
+        )}
 
         {/* Profile Summary */}
         <View style={styles.section}>
@@ -278,6 +341,24 @@ export function PredictionReportPDF({ type, form, result }: PredictionReportPDFP
             <Text>The estimate is generated from submitted demographic, lifestyle, and medical-risk fields. It is dataset-specific and does not constitute a billing guarantee or financial approval/rejection advice. Prototype output only.</Text>
           </View>
         </View>
+
+        {/* Baseline Comparison */}
+        {cRes.baseline_context && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Dataset Baseline Comparison</Text>
+            <View style={styles.resultCard}>
+              <BaselineBulletChartPDF label="Age" value={cForm.age} stats={cRes.baseline_context.age} />
+              <BaselineBulletChartPDF label="Weight" value={cForm.weight} stats={cRes.baseline_context.weight} />
+              <BaselineBulletChartPDF label="BMI" value={cForm.bmi} stats={cRes.baseline_context.bmi} />
+              <BaselineBulletChartPDF label="Blood Pressure" value={cForm.bloodpressure} stats={cRes.baseline_context.bloodpressure} />
+              <BaselineBulletChartPDF label="Dependents" value={cForm.no_of_dependents} stats={cRes.baseline_context.no_of_dependents} />
+              <View style={{ marginTop: 5, paddingTop: 10, borderTop: "1px solid #e5e7eb" }}>
+                <BaselineBulletChartPDF label="Predicted Claim vs Target Baseline" value={cRes.predicted_claim_amount} stats={cRes.baseline_context.claim} isCurrency={true} />
+              </View>
+              <Text style={{ fontSize: 8, color: "#6b7280", marginTop: 5 }}>Descriptive reference only. The shaded bar is the dataset IQR (25th-75th percentile). This does not explain causality or feature importance.</Text>
+            </View>
+          </View>
+        )}
 
         {/* Profile Summary */}
         <View style={styles.section}>

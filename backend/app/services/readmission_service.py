@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 import joblib
 import pandas as pd
+import json
 
 from app.core.config import settings, PROJECT_ROOT
 from app.schemas.readmission import ReadmissionRequest, ReadmissionPredictionResponse
@@ -17,7 +18,19 @@ class ReadmissionService:
         self.model_path = path if path.is_absolute() else PROJECT_ROOT / path
         self.model_loaded = False
         self.model = None
+        self.baseline_context = None
         self._initialize_model()
+        self._load_baseline()
+
+    def _load_baseline(self):
+        try:
+            baseline_path = PROJECT_ROOT / "ml" / "artifacts" / "readmission_baseline_summary.json"
+            if baseline_path.exists():
+                with open(baseline_path, "r") as f:
+                    self.baseline_context = json.load(f)
+                logger.info("Readmission baseline loaded.")
+        except Exception as exc:
+            logger.error("Failed to load baseline: %s", exc)
 
     def _initialize_model(self):
         """
@@ -49,6 +62,7 @@ class ReadmissionService:
                 confidence_note="Model artifacts are missing. Train the model first.",
                 model_status="not_configured",
                 timestamp=datetime.now(timezone.utc).isoformat(),
+                baseline_context=self.baseline_context,
             )
 
         try:
@@ -83,6 +97,7 @@ class ReadmissionService:
                 ),
                 model_status="active",
                 timestamp=datetime.now(timezone.utc).isoformat(),
+                baseline_context=self.baseline_context,
             )
 
         except Exception as exc:

@@ -280,6 +280,61 @@ const clGroups: GroupConfig[] = [
   },
 ];
 
+function BaselineBulletChart({
+  label,
+  value,
+  stats,
+  isCurrency = false
+}: {
+  label: string;
+  value: number;
+  stats?: import("../../lib/types").BaselineStats;
+  isCurrency?: boolean;
+}) {
+  if (!stats || stats.max === stats.min) return null;
+
+  const fmt = (v: number) => isCurrency 
+    ? `$${v.toLocaleString(undefined, { maximumFractionDigits: 0 })}` 
+    : v.toLocaleString(undefined, { maximumFractionDigits: 1 });
+
+  const toPct = (v: number) => Math.max(0, Math.min(100, ((v - stats.min) / (stats.max - stats.min)) * 100));
+
+  const p25Pct = toPct(stats.p25);
+  const p75Pct = toPct(stats.p75);
+  const medianPct = toPct(stats.median);
+  const valPct = toPct(value);
+
+  return (
+    <div className="mb-4 last:mb-0">
+      <div className="flex justify-between items-end mb-1.5">
+        <span className="text-xs font-semibold text-muted-foreground">{label}</span>
+        <span className="text-xs font-bold text-foreground">{fmt(value)}</span>
+      </div>
+      <div className="relative h-4 bg-muted/30 rounded overflow-hidden">
+        <div 
+          className="absolute h-full bg-muted-foreground/30"
+          style={{ left: `${p25Pct}%`, width: `${p75Pct - p25Pct}%` }}
+        />
+        <div 
+          className="absolute top-0 bottom-0 w-0.5 bg-foreground/50 z-10"
+          style={{ left: `${medianPct}%` }}
+        />
+        <div 
+          className={`absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full z-20 border border-background shadow-[0_0_5px_rgba(20,184,166,0.5)] ${
+            isCurrency ? 'bg-secondary' : 'bg-primary'
+          }`}
+          style={{ left: `calc(${valPct}% - 4px)` }}
+        />
+      </div>
+      <div className="flex justify-between mt-1 opacity-50">
+        <span className="text-[9px]">{fmt(stats.min)}</span>
+        <span className="text-[9px]">Median: {fmt(stats.median)}</span>
+        <span className="text-[9px]">{fmt(stats.max)}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function PredictPage() {
   const [tab, setTab] = useState<"re" | "cl">("re");
   const [loading, setLoading] = useState(false);
@@ -602,6 +657,28 @@ export default function PredictPage() {
                       <p>{reRes.disclaimer}</p>
                     </div>
                   </div>
+
+                  {/* Baseline Comparisons */}
+                  {reRes.baseline_context && (
+                    <div className="mt-6 pt-5 border-t border-border/50">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
+                        Dataset Baseline Comparison
+                      </p>
+                      <div className="space-y-4">
+                        <BaselineBulletChart label="Time in Hospital" value={reForm.time_in_hospital} stats={reRes.baseline_context.time_in_hospital} />
+                        <BaselineBulletChart label="Lab Procedures" value={reForm.num_lab_procedures} stats={reRes.baseline_context.num_lab_procedures} />
+                        <BaselineBulletChart label="Other Procedures" value={reForm.num_procedures} stats={reRes.baseline_context.num_procedures} />
+                        <BaselineBulletChart label="Medications" value={reForm.num_medications} stats={reRes.baseline_context.num_medications} />
+                        <BaselineBulletChart label="Outpatient Visits" value={reForm.number_outpatient} stats={reRes.baseline_context.number_outpatient} />
+                        <BaselineBulletChart label="Emergency Visits" value={reForm.number_emergency} stats={reRes.baseline_context.number_emergency} />
+                        <BaselineBulletChart label="Inpatient Visits" value={reForm.number_inpatient} stats={reRes.baseline_context.number_inpatient} />
+                        <BaselineBulletChart label="Diagnoses" value={reForm.number_diagnoses} stats={reRes.baseline_context.number_diagnoses} />
+                      </div>
+                      <p className="text-[9px] text-muted-foreground mt-3 leading-relaxed">
+                        Descriptive reference only. The highlighted dot is the submitted value. The shaded bar is the dataset IQR (25th-75th percentile). This does not explain causality or feature importance.
+                      </p>
+                    </div>
+                  )}
                   
                   {/* Generate Report Button */}
                   <div className="mt-6 pt-4">
@@ -652,6 +729,28 @@ export default function PredictPage() {
                       <p>{clRes.disclaimer}</p>
                     </div>
                   </div>
+
+                  {/* Baseline Comparisons */}
+                  {clRes.baseline_context && (
+                    <div className="mt-6 pt-5 border-t border-border/50">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
+                        Dataset Baseline Comparison
+                      </p>
+                      <div className="space-y-4">
+                        <BaselineBulletChart label="Age" value={clForm.age} stats={clRes.baseline_context.age} />
+                        <BaselineBulletChart label="Weight" value={clForm.weight} stats={clRes.baseline_context.weight} />
+                        <BaselineBulletChart label="BMI" value={clForm.bmi} stats={clRes.baseline_context.bmi} />
+                        <BaselineBulletChart label="Blood Pressure" value={clForm.bloodpressure} stats={clRes.baseline_context.bloodpressure} />
+                        <BaselineBulletChart label="Dependents" value={clForm.no_of_dependents} stats={clRes.baseline_context.no_of_dependents} />
+                        <div className="pt-2">
+                          <BaselineBulletChart label="Predicted Claim vs Target Baseline" value={clRes.predicted_claim_amount} stats={clRes.baseline_context.claim} isCurrency={true} />
+                        </div>
+                      </div>
+                      <p className="text-[9px] text-muted-foreground mt-3 leading-relaxed">
+                        Descriptive reference only. The highlighted dot is the submitted/predicted value. The shaded bar is the dataset IQR (25th-75th percentile). This does not explain causality or feature importance.
+                      </p>
+                    </div>
+                  )}
 
                   {/* Generate Report Button */}
                   <div className="mt-6 pt-4">

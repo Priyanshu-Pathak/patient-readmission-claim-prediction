@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 import joblib
 import pandas as pd
+import json
 
 from app.core.config import settings, PROJECT_ROOT
 from app.schemas.claim import ClaimRequest, ClaimPredictionResponse
@@ -16,7 +17,19 @@ class ClaimService:
         self.model_path = path if path.is_absolute() else PROJECT_ROOT / path
         self.model_loaded = False
         self.model = None
+        self.baseline_context = None
         self._initialize_model()
+        self._load_baseline()
+
+    def _load_baseline(self):
+        try:
+            baseline_path = PROJECT_ROOT / "ml" / "artifacts" / "claim_baseline_summary.json"
+            if baseline_path.exists():
+                with open(baseline_path, "r") as f:
+                    self.baseline_context = json.load(f)
+                logger.info("Claim baseline loaded.")
+        except Exception as exc:
+            logger.error("Failed to load baseline: %s", exc)
 
     def _initialize_model(self):
         """
@@ -45,6 +58,7 @@ class ClaimService:
                 model_status="not_configured",
                 confidence_note="Claim model artifact is missing. Train the model first.",
                 timestamp=datetime.now(timezone.utc).isoformat(),
+                baseline_context=self.baseline_context,
             )
 
         try:
@@ -63,6 +77,7 @@ class ClaimService:
                     "Unseen cities/job titles fall back to ensemble average."
                 ),
                 timestamp=datetime.now(timezone.utc).isoformat(),
+                baseline_context=self.baseline_context,
             )
 
         except Exception as exc:

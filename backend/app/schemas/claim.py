@@ -54,3 +54,5 @@ class ClaimPredictionResponse(BaseModel):
         "Do not use for actual insurance underwriting or pricing decisions.",
         description="Mandatory disclaimer",
     )
+    baseline_context: Optional[dict] = Field(None, description="Descriptive dataset baseline comparisons")
+

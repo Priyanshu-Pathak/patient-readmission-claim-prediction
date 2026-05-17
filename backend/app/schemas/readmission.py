@@ -76,3 +76,5 @@ class ReadmissionPredictionResponse(BaseModel):
         "Do not use for clinical diagnosis or treatment decisions.",
         description="Mandatory medical disclaimer"
     )
+    baseline_context: Optional[dict] = Field(None, description="Descriptive dataset baseline comparisons")
+

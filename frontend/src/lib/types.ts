@@ -71,6 +71,21 @@ export interface ClaimRequest {
   job_title: string;
 }
 
+// ─── Baseline Context Types ──────────────────────────────────────────────────
+export interface BaselineStats {
+  min: number;
+  p25: number;
+  median: number;
+  p75: number;
+  max: number;
+  mean: number;
+  std: number;
+  count: number;
+}
+
+export type BaselineContext = Record<string, BaselineStats>;
+
+
 // ─── Readmission Response ────────────────────────────────────────────────────
 export interface ReadmissionResponse {
   risk_label: string;
@@ -82,6 +97,7 @@ export interface ReadmissionResponse {
   explanation: Record<string, unknown> | null;
   timestamp: string;
   disclaimer: string;
+  baseline_context?: BaselineContext;
 }
 
 // ─── Claim Response ──────────────────────────────────────────────────────────
@@ -92,6 +108,7 @@ export interface ClaimResponse {
   confidence_note: string;
   timestamp: string;
   disclaimer: string;
+  baseline_context?: BaselineContext;
 }
 
 // ─── Shared API wrapper ──────────────────────────────────────────────────────
